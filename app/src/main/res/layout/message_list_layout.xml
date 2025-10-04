@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_content"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_drawable">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/list_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="0"
+        app:cardBackgroundColor="@color/dark_brown">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/list_cardView_UserIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/bonfire" />
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/list_messages_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/friend_groupchat"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+    android:id="@+id/list_Buttons"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:orientation="horizontal"
+    android:background="@color/dark_brown">
+
+        <ImageButton
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:contentDescription="Settings"
+            app:srcCompat="@drawable/settings"/>
+
+        <ImageButton
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:contentDescription="User"
+            app:srcCompat="@drawable/user"/>
+
+</LinearLayout>
+
+
+
+</LinearLayout>

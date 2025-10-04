@@ -12,4 +12,10 @@
     <color name="yellow_200">#E6EE9C</color>
     <color name="yellow_700">#FBC02D</color>
     <color name="bg_yellow">#FFF59D</color>
+    <color name="light_orange">#AC6855</color>
+    <color name="light_brown">#FFD9BA</color>
+    <color name="semi_dark_brown">#7C5442</color>
+    <color name="dark_brown">#4B3329</color>
+    <color name="dark_gray">#4B4B4B</color>
+    <color name="light_gray">#7A7A7A</color>
 </resources>

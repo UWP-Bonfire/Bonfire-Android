@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/gradient_drawable">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/chat_cardView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_weight="0"
-        app:cardBackgroundColor="@color/bg_yellow">
+        app:cardBackgroundColor="@color/dark_brown">
 
         <LinearLayout
             android:id="@+id/chat_cardView_LinearLayout"
@@ -25,17 +26,18 @@
             android:padding="3dp"
             android:paddingStart="10dp">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/chat_cardView_backArrow"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:alpha=".8"
-                app:srcCompat="@drawable/arrow_left" />
+                app:srcCompat="@drawable/arrow_left"
+                app:tint="@color/white"
+                android:background="#00FFFFFF"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/chat_cardView_UserIcon"
                 android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 app:shapeAppearanceOverlay="@style/Circular"
                 app:srcCompat="@drawable/amaice_profile_picture" />
 
@@ -47,89 +49,48 @@
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:text="amaice"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="34sp" />
 
         </LinearLayout>
 
+
     </androidx.cardview.widget.CardView>
 
     <ScrollView
-        android:id="@+id/chat_ScrollView"
+        android:id="@+id/chat_messages_ScrollView"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@drawable/gradient_drawable">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
         <LinearLayout
-            android:id="@+id/chat_ScrollView_LinearLayout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="10dp">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 01" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 02" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 03" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 04" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 05" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 06" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 07" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Text 08" />
+            android:paddingBottom="20dp">
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
+            <include layout="@layout/message"/>
 
         </LinearLayout>
     </ScrollView>
 
 
-
-<LinearLayout
+    <LinearLayout
     android:id="@+id/chat_MessageBar"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:orientation="horizontal"
-    android:background="@color/bg_yellow">
+    android:background="@color/dark_brown">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/chat_MessageBar_TextInputLayout"
@@ -137,8 +98,11 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:hint="Message"
+        android:textColorHint="@color/white"
+        app:boxStrokeColor="@color/light_brown"
+        app:boxStrokeWidth="0dp"
         android:padding="8dp"
-        app:boxBackgroundColor="@color/white">
+        app:boxBackgroundColor="@color/semi_dark_brown">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/chat_MessageBar_TextInputEditText"
@@ -159,7 +123,8 @@
         android:paddingStart="0dp"
         android:paddingEnd="8dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/send" />
+        app:srcCompat="@drawable/send"
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/chat_MessageBar_ImageButton"
@@ -171,7 +136,8 @@
         android:paddingEnd="8dp"
         android:layout_gravity="center"
         android:contentDescription="Image send"
-        app:srcCompat="@drawable/image_area" />
+        app:srcCompat="@drawable/image_area"
+        app:tint="@color/white" />
 </LinearLayout>
 
 

@@ -2,21 +2,20 @@ package com.example.bonfire
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 
-class LoginActivity : AppCompatActivity() {
+class MessagesListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_layout)
+        setContentView(R.layout.message_list_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        // Button to switch to main screen activity
-        val loginButton: Button = findViewById(R.id.login_button)
+        val loginButton: ImageButton = findViewById(R.id.text_chat_list_message)
         loginButton.setOnClickListener {
-            val intent = Intent(this, MessagesListActivity::class.java)
+            val intent = Intent(this, MessageActivity::class.java)
             startActivity(intent);
         }
     }

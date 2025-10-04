@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="16dp">
 
-    <!-- Date separator -->
-    <TextView
-        android:id="@+id/text_chat_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:paddingStart="8dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="4dp"
-        android:text="June 10"
-        android:textColor="#C0C0C0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    &lt;!&ndash; Date separator &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:id="@+id/text_chat_date"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:paddingStart="8dp"-->
+<!--        android:paddingTop="4dp"-->
+<!--        android:paddingEnd="8dp"-->
+<!--        android:paddingBottom="4dp"-->
+<!--        android:text="June 10"-->
+<!--        android:textColor="#C0C0C0"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!-- User icon -->
     <com.google.android.material.imageview.ShapeableImageView
@@ -33,7 +32,7 @@
 
         app:layout_constraintBottom_toBottomOf="@+id/card_chat_message"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_chat_user"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/amaice_profile_picture" />
 
     <!--User name-->
@@ -43,9 +42,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="amaice"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/image_chat_profile"
-        app:layout_constraintTop_toBottomOf="@+id/text_chat_date" />
+        app:layout_constraintTop_toTopOf="@id/image_chat_profile"/>
 
     <!--Message -->
     <androidx.cardview.widget.CardView
@@ -54,8 +55,6 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
         app:layout_constraintStart_toEndOf="@+id/image_chat_profile"
         app:layout_constraintTop_toBottomOf="@+id/text_chat_user">
         <LinearLayout
@@ -73,7 +72,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
                 android:text="Message"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -83,9 +82,10 @@
         android:id="@+id/text_chat_timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="8:00"
-        android:textColor="#C0C0C0"
+        android:text="2025-10-04 06:26"
+        android:textColor="@color/dark_gray"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/card_chat_message"
-        app:layout_constraintStart_toEndOf="@+id/card_chat_message" />
+        android:paddingLeft="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_chat_user"
+        app:layout_constraintStart_toEndOf="@+id/text_chat_user" />
 </androidx.constraintlayout.widget.ConstraintLayout>
