@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Bonfire" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Bonfire" parent="android:Theme.Material.Light.NoActionBar">
+        <!--Font style-->
+
+
+    </style>
     <!-- Base application theme. -->
     <style name="Base.Theme.Bonfire" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+
     <style name="AppTheme" parent="TextAppearance.AppCompat">
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
@@ -14,8 +19,17 @@
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/inter</item>
     </style>
-
     <style name="ButtonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+
+    <!--Cut images into shapes-->
+    <style name="Circular">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="RoundedSquare">
+        <item name="cornerSize">10%</item>
     </style>
 </resources>
