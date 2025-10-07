@@ -15,8 +15,8 @@ class MessagesListActivity : AppCompatActivity() {
 
         val loginButton: ImageButton = findViewById(R.id.text_chat_list_message)
         loginButton.setOnClickListener {
-            val intent = Intent(this, MessageActivity::class.java)
-            startActivity(intent);
+            val intent = Intent(this, ChatActivity::class.java)
+            startActivity(intent)
         }
     }
 }

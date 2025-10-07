@@ -3,7 +3,6 @@ package com.example.bonfire
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -12,10 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 
-class MessageActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.message_layout)
+        setContentView(R.layout.chat_layout)
 
         // Prevent dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -24,7 +23,7 @@ class MessageActivity : AppCompatActivity() {
         val loginButton: ImageButton = findViewById(R.id.chat_cardView_backArrow)
         loginButton.setOnClickListener {
             val intent = Intent(this, MessagesListActivity::class.java)
-            startActivity(intent);
+            startActivity(intent)
         }
 
         // Reset layout when keyboard pulls up

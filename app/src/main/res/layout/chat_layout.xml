@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_content"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_drawable">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chat_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="0"
+        app:cardBackgroundColor="@color/dark_brown">
+
+        <LinearLayout
+            android:id="@+id/chat_cardView_LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:padding="3dp"
+            android:paddingStart="10dp">
+
+            <ImageButton
+                android:id="@+id/chat_cardView_backArrow"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/arrow_left"
+                app:tint="@color/white"
+                android:background="#00FFFFFF"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/chat_cardView_UserIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:shapeAppearanceOverlay="@style/Circular"
+                app:srcCompat="@drawable/amaice_profile_picture" />
+
+            <TextView
+                android:id="@+id/chat_cardView_UserName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:text="amaice"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="34sp" />
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/chat_messages_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+            <include layout="@layout/message_layout"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+    android:id="@+id/chat_MessageBar"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:background="@color/dark_brown">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/chat_MessageBar_TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="Message"
+        android:textColorHint="@color/white"
+        app:boxStrokeColor="@color/light_brown"
+        app:boxStrokeWidth="0dp"
+        android:padding="8dp"
+        app:boxBackgroundColor="@color/semi_dark_brown">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/chat_MessageBar_TextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <ImageView
+        android:id="@+id/chat_MessageBar_SendButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_weight="0"
+        android:alpha=".8"
+        android:contentDescription="Send"
+        android:paddingStart="0dp"
+        android:paddingEnd="8dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/send"
+        app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/chat_MessageBar_ImageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_weight="0"
+        android:alpha=".8"
+        android:paddingStart="0dp"
+        android:paddingEnd="8dp"
+        android:layout_gravity="center"
+        android:contentDescription="Image send"
+        app:srcCompat="@drawable/image_area"
+        app:tint="@color/white" />
+</LinearLayout>
+
+
+
+</LinearLayout>
