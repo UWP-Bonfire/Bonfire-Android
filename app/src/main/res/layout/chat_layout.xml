@@ -58,32 +58,12 @@
 
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
-        android:id="@+id/chat_messages_ScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_messages_RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="1">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-            <include layout="@layout/message_layout"/>
-
-        </LinearLayout>
-    </ScrollView>
-
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
     android:id="@+id/chat_MessageBar"
