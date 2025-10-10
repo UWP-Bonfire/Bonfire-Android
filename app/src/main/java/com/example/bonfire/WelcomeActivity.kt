@@ -6,17 +6,17 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 
-class LoginActivity : AppCompatActivity() {
+class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_layout)
+        setContentView(R.layout.welcome_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         // Button to switch to main screen activity
-        val loginButton: Button = findViewById(R.id.login_button)
+        val loginButton: Button = findViewById(R.id.welcome_button)
         loginButton.setOnClickListener {
-            val intent = Intent(this, MessagesListActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent);
         }
     }
