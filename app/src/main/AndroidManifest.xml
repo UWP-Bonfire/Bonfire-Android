@@ -11,13 +11,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bonfire">
         <activity
-            android:name=".LoginActivity"
+            android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".SignInActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bonfire">
+        </activity>
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".SignUpActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bonfire">
         </activity>
         <activity
             android:windowSoftInputMode="adjustResize"

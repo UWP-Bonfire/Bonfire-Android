@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate
 class MessagesListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.message_list_layout)
+        setContentView(R.layout.groupchat_list_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
