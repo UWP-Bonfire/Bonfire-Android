@@ -33,7 +33,7 @@ class ChatActivity : AppCompatActivity() {
         // Button to switch to main screen activity
         val loginButton: ImageButton = findViewById(R.id.chat_cardView_backArrow)
         loginButton.setOnClickListener {
-            val intent = Intent(this, MessagesListActivity::class.java)
+            val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent);
         }
 

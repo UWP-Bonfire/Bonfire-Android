@@ -16,7 +16,7 @@ class SignInActivity : AppCompatActivity() {
         // Button to switch to main screen activity
         val signinButton: Button = findViewById(R.id.signin_button)
         signinButton.setOnClickListener {
-            val intent = Intent(this, MessagesListActivity::class.java)
+            val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent)
         }
 

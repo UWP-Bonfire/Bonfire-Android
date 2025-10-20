@@ -27,11 +27,11 @@
                 android:id="@+id/image_chat_list_profile"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:shapeAppearanceOverlay="@style/Circular"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="User Icon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/amaice_profile_picture"
-                android:layout_gravity="center_vertical"/>
+                app:shapeAppearanceOverlay="@style/Circular"
+                app:srcCompat="@drawable/chat_processing" />
 
 
             <!--User name-->
@@ -39,13 +39,13 @@
                 android:id="@+id/text_chat_list_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
-                android:text="amaice"
                 android:layout_weight="1"
-                android:textStyle="bold"
+                android:text="Global chat"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                android:layout_gravity="center_vertical"/>
+                android:textStyle="bold" />
 
 
             <ImageButton

@@ -38,7 +38,7 @@
             android:theme="@style/Theme.Bonfire">
         </activity>
         <activity
-            android:name=".MessagesListActivity"
+            android:name=".GroupChatListActivity"
             android:exported="true"
             android:theme="@style/Theme.Bonfire">
         </activity>
