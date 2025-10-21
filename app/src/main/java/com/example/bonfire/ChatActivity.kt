@@ -2,6 +2,7 @@ package com.example.bonfire
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,9 @@ import com.example.bonfire.messagesRecycler.FakeRepository
 import com.example.bonfire.messagesRecycler.Message
 import com.example.bonfire.messagesRecycler.MessageAdapter
 import com.example.bonfire.messagesRecycler.MessageId
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 
 class ChatActivity : AppCompatActivity() {
@@ -22,8 +26,13 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_layout)
 
+        // read in friendId to open correct chat
+        val b = intent.extras
+        val friendId: String? = b!!.getString("id")
+
+
         var recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-        recyclerView.adapter = MessageAdapter(createData())
+        recyclerView.adapter = MessageAdapter(createData(friendId))
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
@@ -62,21 +71,58 @@ class ChatActivity : AppCompatActivity() {
      * Uses the repository to collect the raw data and bundles up those values
      * into our Message data class, something our adapter knows how to work with
      */
-    private fun createData(): List<Message> {
+    private fun createData(friendId: String?): List<Message> {
         //Get data from the repository
         val names = FakeRepository.messageUserName
         val content = FakeRepository.messageContent
         val profilePicture = FakeRepository.messageProfile
 
+        val db = Firebase.firestore
+
+        // Generate chatId, which is the two users, combined
+        // Ex. userId = "abc" and friendId = "bcd" -> chatId = "abc_bcd"
+
+        // Exception is if friendId == null, therefore its the global chat
+        var chatId = "chatId"
+        var messagesPath = "messages"
+        if (friendId != null){
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            val chatIdArray = arrayOf(userId, friendId)
+            chatIdArray.sort()
+
+            chatId = chatIdArray.joinToString("_")
+            messagesPath = "chats/$chatId/messages"
+        }
+        Log.i("chat", chatId)
+
         val messageData = ArrayList<Message>()
+
+        db.collection(messagesPath)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    messageData.add(
+                        Message(
+                            displayName = document.data['displayName'],
+                            text = document.data['photoURL'],
+                            photoURL = profilePicture[messageID]!!
+                        )
+                    )
+                    Log.i( "chat", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w( "Error getting documents: ", exception)
+            }
+
         MessageId.entries.forEach { messageID ->
             //If the Id is in all lists, add message to the ArrayList
             if (containsId(messageID, names, profilePicture)) {
                 messageData.add(
                     Message(
-                        userName = names[messageID]!!,
-                        content = content[messageID]!!,
-                        userProfile = profilePicture[messageID]!!
+                        displayName = names[messageID]!!,
+                        text = content[messageID]!!,
+                        photoURL = profilePicture[messageID]!!
                     )
                 )
             }

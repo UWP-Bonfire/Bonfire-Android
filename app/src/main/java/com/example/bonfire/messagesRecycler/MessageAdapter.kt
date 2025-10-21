@@ -27,9 +27,9 @@ class MessageAdapter(private val data: List<Message>) : RecyclerView.Adapter<Mes
     //Set values to the views based on the position of the recyclerView
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val message : Message = data[position]
-        holder.name.text = message.userName
-        holder.content.text = message.content
-        holder.picture.setImageResource(message.userProfile)
+        holder.name.text = message.displayName
+        holder.content.text = message.text
+        holder.picture.setImageResource(message.photoURL)
     }
 
     //  Total number of elements in recyclerView
