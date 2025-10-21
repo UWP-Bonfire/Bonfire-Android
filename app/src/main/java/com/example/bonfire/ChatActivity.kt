@@ -2,6 +2,7 @@ package com.example.bonfire
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +16,28 @@ import com.example.bonfire.messagesRecycler.FakeRepository
 import com.example.bonfire.messagesRecycler.Message
 import com.example.bonfire.messagesRecycler.MessageAdapter
 import com.example.bonfire.messagesRecycler.MessageId
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 
 class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_layout)
+
+        val db = Firebase.firestore
+        // read from global chat, which is the messages collection in firestore
+        db.collection("messages")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.v(TAG, "${document.id} => ${document.data}")
+
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
 
         var recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.adapter = MessageAdapter(createData())
@@ -93,5 +110,8 @@ class ChatActivity : AppCompatActivity() {
             if (messageID !in it.keys) { return false }
         }
         return true
+    }
+    companion object {
+        private const val TAG = "EmailPassword"
     }
 }
