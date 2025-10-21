@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "474303125087",
+    "firebase_url": "https://bonfire-d8db1-default-rtdb.firebaseio.com",
+    "project_id": "bonfire-d8db1",
+    "storage_bucket": "bonfire-d8db1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474303125087:android:657c396b98513cb4b16dea",
+        "android_client_info": {
+          "package_name": "com.example.bonfire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeb8JJ90cE2mknCxlOPhSOgrjQevDjSXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
