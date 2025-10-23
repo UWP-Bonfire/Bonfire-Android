@@ -16,7 +16,7 @@ class SignUpActivity : AppCompatActivity() {
         // Button to switch to main screen activity
         val signupButton: Button = findViewById(R.id.signup_button)
         signupButton.setOnClickListener {
-            val intent = Intent(this, MessagesListActivity::class.java)
+            val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent)
         }
 
