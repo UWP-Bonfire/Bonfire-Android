@@ -1,12 +1,11 @@
 package com.example.bonfire.messagesRecycler
 
-import androidx.annotation.DrawableRes
 import com.google.type.DateTime
 
 data class Message(
     val displayName: String,
-    @DrawableRes val photoURL: Int,
+    val photoURL: String,
     val text: String,
-    val timeStamp: DateTime,
+    val timestamp: DateTime,
     val uid: String
 )
