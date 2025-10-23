@@ -32,7 +32,7 @@ class SignInActivity : AppCompatActivity() {
         val signInButton: Button = findViewById(R.id.signin_button)
         signInButton.setOnClickListener {
             // get contents of email/user and password inputs
-            val emailEditText:  TextInputEditText = findViewById(R.id.signin_user_edit)
+            val emailEditText:  TextInputEditText = findViewById(R.id.signin_email_edit)
             val passwordEditText: TextInputEditText = findViewById(R.id.signin_password_edit)
             val emailEditable = emailEditText.getText()
             val passwordEditable = passwordEditText.getText()
