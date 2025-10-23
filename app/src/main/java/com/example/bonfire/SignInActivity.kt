@@ -21,11 +21,6 @@ class SignInActivity : AppCompatActivity() {
         setContentView(R.layout.signin_layout)
 
         auth = Firebase.auth
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            //reload()
-        }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 

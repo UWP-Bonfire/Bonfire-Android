@@ -37,52 +37,11 @@
             android:paddingBottom="20dp">
 
             <include
-                android:id="@+id/include"
+                android:id="@+id/bottom_nav"
                 layout="@layout/groupchat_layout"/>
 
         </LinearLayout>
     </ScrollView>
 
-
-    <LinearLayout
-    android:id="@+id/list_Buttons"
-    android:layout_width="match_parent"
-    android:layout_height="130dp"
-    android:orientation="horizontal"
-    android:background="@color/dark_brown">
-
-        <ImageButton
-            android:id="@+id/menu_button_settings"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:contentDescription="Settings"
-            app:srcCompat="@drawable/settings"
-            android:scaleType="fitCenter"/>
-
-        <ImageButton
-            android:id="@+id/menu_button_account"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:contentDescription="User"
-            app:srcCompat="@drawable/user"
-            android:scaleType="fitCenter"/>
-
-        <ImageButton
-            android:id="@+id/menu_button_logout"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:contentDescription="User"
-            app:srcCompat="@drawable/logout"
-            android:scaleType="fitCenter"/>
-
-    </LinearLayout>
-
-
-
+    <include layout="@layout/bottom_nav_layout"/>
 </LinearLayout>
