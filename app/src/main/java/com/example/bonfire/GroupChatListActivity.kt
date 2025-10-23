@@ -22,7 +22,8 @@ class GroupChatListActivity : AppCompatActivity() {
             // TODO: Generate list of friends, and open the specific chat message with them
             // if there is no friendID, this is the global chat
             // Passes friendID to chat activity
-            val id = "oV2wejAGCWfpkfP8blVe4pKRYxH2" //  hardcoded amaice user id
+            val id = ""
+            //val id = "oV2wejAGCWfpkfP8blVe4pKRYxH2" //  hardcoded amaice user id
             intent.putExtra("id", id)
             startActivity(intent)
         }

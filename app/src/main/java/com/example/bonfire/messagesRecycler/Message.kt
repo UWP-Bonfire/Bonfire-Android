@@ -6,6 +6,6 @@ data class Message(
     val displayName: String,
     val photoURL: String,
     val text: String,
-    val timestamp: DateTime,
+    val timestamp: Any?,
     val uid: String
 )

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.Insets
@@ -33,7 +34,10 @@ class ChatActivity : AppCompatActivity() {
 
         // read in friendId to open correct chat
         val b = intent.extras
-        val friendId: String? = b!!.getString("id")
+        var friendId: String? = b!!.getString("id")
+        if(friendId == ""){
+            friendId = null
+        }
 
 
         var recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
@@ -90,6 +94,7 @@ class ChatActivity : AppCompatActivity() {
         // Exception is if friendId == null, therefore its the global chat
         var chatId = "chatId"
         var messagesPath = "messages"
+
         if (friendId != null){
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             val chatIdArray = arrayOf(userId, friendId)
@@ -112,10 +117,10 @@ class ChatActivity : AppCompatActivity() {
                     messageData.add(
                         Message(
                             displayName = document.data["displayName"].toString(),
-                            photoURL = document.data["photoURL"] as String,
-                            text = document.data["text"] as String,
-                            timestamp = document.data["timestamp"] as DateTime,
-                            uid = document.data["uid"] as String
+                            photoURL = document.data["photoURL"].toString() ,
+                            text = document.data["text"].toString(),
+                            timestamp = document.data["timestamp"],
+                            uid = document.data["uid"].toString()
                         )
                     )
                     Log.i( "chat", "${document.id} => ${document.data}")
@@ -123,20 +128,8 @@ class ChatActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.w( "Error getting documents: ", exception)
+                Toast.makeText(baseContext, "Error getting documents: " + exception, Toast.LENGTH_LONG).show()
             }
-
-//        MessageId.entries.forEach { messageID ->
-//            //If the Id is in all lists, add message to the ArrayList
-//            if (containsId(messageID, names, profilePicture)) {
-//                messageData.add(
-//                    Message(
-//                        displayName = names[messageID]!!,
-//                        text = content[messageID]!!,
-//                        photoURL = profilePicture[messageID]!!
-//                    )
-//                )
-//            }
-//        }
 
         return messageData
     }
