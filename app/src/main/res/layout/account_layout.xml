@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:grid="http://schemas.android.com/tools"
+    android:id="@+id/account_content"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_drawable">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/account_card"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_margin="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/amaice_profile_picture"
+                android:layout_margin="32dp"
+                android:layout_gravity="center_horizontal"
+                app:shapeAppearanceOverlay="@style/Circular" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="amaice"
+                android:textStyle="bold"
+                android:textSize="28dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="amaice4@gmail.com"
+                android:textSize="18dp"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="Select a profile picture"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:rowCount="3"
+                android:columnCount="5"
+
+                grid:alignmentMode="alignBounds"
+                grid:columnCount="5"
+                grid:rowOrderPreserved="false"
+                grid:useDefaultMargins="true"
+                android:layout_margin="12dp">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    grid:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:src="@drawable/amaice_profile_picture"
+                    android:layout_gravity="center"
+                    app:shapeAppearanceOverlay="@style/Circular" />            </GridLayout>
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_nav_layout"
+        android:layout_height="130dp"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

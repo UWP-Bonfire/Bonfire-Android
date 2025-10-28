@@ -13,9 +13,16 @@ class WelcomeActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        // Button to switch to main screen activity
-        val loginButton: Button = findViewById(R.id.welcome_button)
-        loginButton.setOnClickListener {
+        // Button to switch to sign in activity
+        val signInButton: Button = findViewById(R.id.welcome_signin_button)
+        signInButton.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent);
+        }
+
+        // Button to switch to  sign up screen activity
+        val signUpButton: Button = findViewById(R.id.welcome_signup_button)
+        signUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent);
         }

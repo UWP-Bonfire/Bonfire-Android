@@ -42,6 +42,10 @@
             android:exported="true"
             android:theme="@style/Theme.Bonfire">
         </activity>
+        <activity android:name=".AccountActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bonfire">
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

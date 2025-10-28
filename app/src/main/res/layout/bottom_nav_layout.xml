@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_Buttons"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:orientation="horizontal"
+    android:background="@color/dark_brown">
+
+        <ImageButton
+            android:id="@+id/menu_button_chat"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:contentDescription="Chat"
+            app:srcCompat="@drawable/chat_bubble"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/menu_button_settings"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:contentDescription="Settings"
+            app:srcCompat="@drawable/settings"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/menu_button_account"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:contentDescription="User"
+            app:srcCompat="@drawable/user"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/menu_button_logout"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:contentDescription="User"
+            app:srcCompat="@drawable/logout"
+            android:scaleType="fitCenter"/>
+
+</LinearLayout>
