@@ -2,9 +2,7 @@ package com.example.bonfire
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
-import android.util.Patterns
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +12,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 
@@ -36,26 +34,17 @@ class SignUpActivity : AppCompatActivity() {
         // Button to switch to main screen activity
         val signupButton: Button = findViewById(R.id.signup_button)
         signupButton.setOnClickListener {
-            // get contents of email/user and password inputs
-            val emailEditText:  TextInputEditText = findViewById(R.id.signup_user_edit)
+            // get contents of email, user and password inputs
+            val userEditText: TextInputEditText = findViewById(R.id.signup_username_edit)
+            val usernameString = userEditText.getText().toString()
+
+            val emailEditText: TextInputEditText = findViewById(R.id.signup_email_edit)
+            val emailString = emailEditText.getText().toString()
+
             val passwordEditText: TextInputEditText = findViewById(R.id.signup_password_edit)
-            val emailEditable = emailEditText.getText()
-            val passwordEditable = passwordEditText.getText()
+            val passwordString = passwordEditText.getText().toString()
 
-            val docRef = db.collection("cities").document("SF")
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                    } else {
-                        Log.d(TAG, "No such document")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "get failed with ", exception)
-                }
-
-            signUp(auth, emailEditable.toString(), passwordEditable.toString())
+            signUp(auth, db,usernameString, emailString, passwordString)
         }
 
         // switch to sign in activity
@@ -66,30 +55,51 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun signUp (auth: FirebaseAuth, email:String, password:String){
-        if (email == "" || password == ""){
+    fun makeToast(string:String){
+        Toast.makeText(baseContext, string, Toast.LENGTH_SHORT).show()
+    }
+
+    fun signUp (auth: FirebaseAuth, db: FirebaseFirestore, username:String, email:String, password:String) {
+        if (username == "" || email == "" || password == "") {
             // pop alert if not all fields filled
-            Toast.makeText(baseContext, "Please fill out all fields", Toast.LENGTH_SHORT).show()
+            makeToast("Please fill out all fields")
+            return
         }
-        else{
-            // Check if username isnt taken
 
+        // Check if username isnt taken
+        val usersRef = db.collection("users").whereEqualTo("name", username)
+        usersRef.get()
+        .addOnSuccessListener { querySnapshot ->
+            if (!querySnapshot.isEmpty) {
+                makeToast("An account with this email already exists.")
+            } else {
+                Log.d(TAG, "No such document")
+                makeAccount(auth, username, email, password)
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+    }
 
-            // Attempt to create user
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success")
+    fun makeAccount(auth: FirebaseAuth, username:String, email:String, password:String){
+        makeToast("safe guard")
+        return
 
-                        val intent = Intent(this, GroupChatListActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, getFriendlyErrorMessage(task.exception), Toast.LENGTH_SHORT).show()
-                    }
-                }
+        // Attempt to create user
+        auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, go to main screen
+                Log.d(TAG, "createUserWithEmail:success")
+
+                val intent = Intent(this, GroupChatListActivity::class.java)
+                startActivity(intent)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                makeToast(getFriendlyErrorMessage(task.exception))
+            }
         }
     }
 
@@ -102,35 +112,6 @@ class SignUpActivity : AppCompatActivity() {
 //            "auth/user-not-found" -> "Invalid password. Please try again."
 //            "auth/wrong-password" -> "Invalid password. Please try again."
 //            "auth/email-already-in-use" ->"An account with this email already exists."
-    }
-
-    // Password should contain 8-36 characters, a lower and uppercase character, a number, and a special character.
-    fun validatePassword(password: String){
-        // Requires 8-36 characters
-        if (password.length > 36 || password.length < 8) false
-
-        // Requires lowercase character
-        val lowerPattern = Regex("[a-z]")
-        if (!lowerPattern.containsMatchIn(password)) false
-
-        // Requires uppercase character
-        val upperPattern = Regex("[A-Z]")
-        if (!upperPattern.containsMatchIn(password)) false
-
-        // Requires number
-        val numberPattern = Regex("[0-9]")
-        if (!numberPattern.containsMatchIn(password)) false
-
-        // Requires a special character
-    }
-
-    // Returns true if string is an email
-    fun isValidEmail(target: String): Boolean {
-        if (TextUtils.isEmpty(target)) {
-            return false
-        } else {
-            return Patterns.EMAIL_ADDRESS.matcher(target).matches()
-        }
     }
 }
 
