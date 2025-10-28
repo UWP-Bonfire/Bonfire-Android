@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.auth
@@ -74,7 +75,7 @@ class SignUpActivity : AppCompatActivity() {
                 makeToast("An account with this email already exists.")
             } else {
                 Log.d(TAG, "No such document")
-                makeAccount(auth, username, email, password)
+                makeAccount(auth, db, username, email, password)
             }
         }
         .addOnFailureListener { exception ->
@@ -82,21 +83,37 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun makeAccount(auth: FirebaseAuth, username:String, email:String, password:String){
-        makeToast("safe guard")
-        return
-
+    fun makeAccount(auth: FirebaseAuth, db: FirebaseFirestore, username:String, email:String, password:String){
         // Attempt to create user
         auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
-                // Sign in success, go to main screen
-                Log.d(TAG, "createUserWithEmail:success")
+                // sign in with just created account
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "signInWithEmail:success")
 
-                val intent = Intent(this, GroupChatListActivity::class.java)
-                startActivity(intent)
+                            // add data to users/[uid]/
+                            val uid: String? = auth.currentUser?.uid
+                            val data = hashMapOf(
+                                "avatar" to "/images/Logo.png",
+                                "createdAt" to Timestamp.now(),
+                                "email" to email,
+                                "name" to username,
+                            )
+                            db.collection("users").document(uid.toString()).set(data)
+
+                            val intent = Intent(this, GroupChatListActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.exception)
+                            Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             } else {
-                // If sign in fails, display a message to the user.
+                // If sign up fails, display a message to the user.
                 Log.w(TAG, "createUserWithEmail:failure", task.exception)
                 makeToast(getFriendlyErrorMessage(task.exception))
             }
