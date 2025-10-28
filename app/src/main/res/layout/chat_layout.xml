@@ -27,12 +27,16 @@
             android:paddingStart="10dp">
 
             <ImageButton
+
                 android:id="@+id/chat_cardView_backArrow"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 app:srcCompat="@drawable/arrow_left"
                 app:tint="@color/white"
-                android:background="#00FFFFFF"/>
+                android:background="#00FFFFFF"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:padding="10dp"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/chat_cardView_UserIcon"

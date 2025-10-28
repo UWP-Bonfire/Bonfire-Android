@@ -32,7 +32,7 @@
                 android:contentDescription="User Icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:srcCompat="@drawable/chat_processing" />
+                app:srcCompat="@drawable/amaice_profile_picture" />
 
 
             <!--User name-->
@@ -43,7 +43,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Global chat"
+                android:text="amaice"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />

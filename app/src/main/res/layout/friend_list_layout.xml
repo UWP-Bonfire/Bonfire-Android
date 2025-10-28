@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/friendlist_content"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_drawable">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/friendlist_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="0"
+        app:cardBackgroundColor="@color/dark_brown">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/friendlist_cardView_UserIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/bonfire" />
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/friendlist_messages_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                style="@style/CardStyle">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/friendlist_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friends"
+                        android:textSize="36dp"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="10dp"/>
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/account_multiple" />
+
+                    <Button
+                        android:id="@+id/friend_add_button"
+                        android:layout_width="120dp"
+                        android:layout_height="60dp"
+                        android:scaleType="fitCenter"
+                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                        android:text="Add Friend"
+                        android:textSize="18dp"
+                        android:layout_marginStart="12dp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+
+            <include
+                android:id="@+id/bottom_nav"
+                layout="@layout/friend_layout"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/bottom_nav_layout"/>
+</LinearLayout>

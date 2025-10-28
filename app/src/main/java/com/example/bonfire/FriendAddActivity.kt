@@ -7,19 +7,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 
-class GroupChatListActivity : AppCompatActivity() {
+
+class FriendAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.groupchat_list_layout)
+        setContentView(R.layout.friend_add_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        val openChatButton: ImageButton = findViewById(R.id.text_chat_list_message)
-        openChatButton.setOnClickListener {
-            val intent = Intent(this, ChatActivity::class.java)
+        // go to chat screen
+        val chatButton: ImageButton = findViewById(R.id.menu_button_chat)
+        chatButton.setOnClickListener {
+            val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
+        // go to back friends screen
+        val friendBackButton: ImageButton = findViewById(R.id.friendadd_backArrow)
+        friendBackButton.setOnClickListener {
+            val intent = Intent(this, FriendListActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // go to friends screen
         val friendButton: ImageButton = findViewById(R.id.menu_button_friends)

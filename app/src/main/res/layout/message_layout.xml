@@ -51,6 +51,7 @@
 
     <!--Message -->
     <androidx.cardview.widget.CardView
+        style="@style/CardStyle"
         android:id="@+id/message_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

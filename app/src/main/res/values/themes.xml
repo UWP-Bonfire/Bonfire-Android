@@ -15,6 +15,9 @@
     <style name="ButtonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/inter</item>
     </style>
+    <style name="CardStyle" parent="CardView">
+        <item name="cardBackgroundColor">@color/very_light_brown</item>
+    </style>
 
     <!--Cut images into shapes-->
     <style name="Circular">

@@ -42,20 +42,22 @@
                 app:shapeAppearanceOverlay="@style/Circular" />
 
             <TextView
+                android:id="@+id/account_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:padding="8dp"
-                android:text="amaice"
-                android:textStyle="bold"
+                android:text="Loading..."
                 android:textSize="28dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/account_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="amaice4@gmail.com"
-                android:textSize="18dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:text="Loading..."
+                android:textSize="18dp" />
 
 
             <TextView

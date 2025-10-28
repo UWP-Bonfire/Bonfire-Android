@@ -40,6 +40,7 @@ class SignInActivity : AppCompatActivity() {
         switchButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -59,6 +60,7 @@ class SignInActivity : AppCompatActivity() {
                         Log.d(TAG, "signInWithEmail:success")
                         val intent = Intent(this, GroupChatListActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.exception)
