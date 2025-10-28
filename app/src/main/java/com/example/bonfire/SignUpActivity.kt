@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -28,6 +29,7 @@ class SignUpActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+        val db = Firebase.firestore
         auth = Firebase.auth
         TAG = "signup"
 
@@ -35,10 +37,23 @@ class SignUpActivity : AppCompatActivity() {
         val signupButton: Button = findViewById(R.id.signup_button)
         signupButton.setOnClickListener {
             // get contents of email/user and password inputs
-            val emailEditText:  TextInputEditText = findViewById(R.id.signup_email_edit)
+            val emailEditText:  TextInputEditText = findViewById(R.id.signup_user_edit)
             val passwordEditText: TextInputEditText = findViewById(R.id.signup_password_edit)
             val emailEditable = emailEditText.getText()
             val passwordEditable = passwordEditText.getText()
+
+            val docRef = db.collection("cities").document("SF")
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
 
             signUp(auth, emailEditable.toString(), passwordEditable.toString())
         }
@@ -57,20 +72,24 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(baseContext, "Please fill out all fields", Toast.LENGTH_SHORT).show()
         }
         else{
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
+            // Check if username isnt taken
 
-                    val intent = Intent(this, GroupChatListActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, getFriendlyErrorMessage(task.exception), Toast.LENGTH_SHORT).show()
+
+            // Attempt to create user
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success")
+
+                        val intent = Intent(this, GroupChatListActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                        Toast.makeText(baseContext, getFriendlyErrorMessage(task.exception), Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
         }
     }
 
@@ -83,9 +102,6 @@ class SignUpActivity : AppCompatActivity() {
 //            "auth/user-not-found" -> "Invalid password. Please try again."
 //            "auth/wrong-password" -> "Invalid password. Please try again."
 //            "auth/email-already-in-use" ->"An account with this email already exists."
-//            "
-//        }
-        return ""
     }
 
     // Password should contain 8-36 characters, a lower and uppercase character, a number, and a special character.
