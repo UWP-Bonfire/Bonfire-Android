@@ -12,36 +12,40 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bonfire.messagesRecycler.FakeRepository
-import com.example.bonfire.messagesRecycler.Message
 import com.example.bonfire.messagesRecycler.MessageAdapter
 import com.example.bonfire.messagesRecycler.MessageId
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 
 
 class ChatActivity : AppCompatActivity() {
+    val TAG = "chat"
+    private lateinit var chatList: ArrayList<Map<String, Any>?>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_layout)
 
-        val db = Firebase.firestore
-        // read from global chat, which is the messages collection in firestore
-        db.collection("messages")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.v(TAG, "${document.id} => ${document.data}")
 
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
+        // read in friendId to open correct chat
+        val b = intent.extras
+        var friendId: String? = b!!.getString("id")
+        if(friendId == ""){
+            friendId = null
+        }
 
-        var recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-        recyclerView.adapter = MessageAdapter(createData())
+        // Recycler view to display messages of chat
+
+        chatList = arrayListOf()
+        createData(friendId)
+        //recyclerView.adapter = MessageAdapter()
+        val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        // Set chat name (global/name of person youre talking to)
+
 
 
         // Prevent dark mode
@@ -79,27 +83,50 @@ class ChatActivity : AppCompatActivity() {
      * Uses the repository to collect the raw data and bundles up those values
      * into our Message data class, something our adapter knows how to work with
      */
-    private fun createData(): List<Message> {
-        //Get data from the repository
-        val names = FakeRepository.messageUserName
-        val content = FakeRepository.messageContent
-        val profilePicture = FakeRepository.messageProfile
+    private fun createData(friendId: String?){
+        val db = Firebase.firestore
 
-        val messageData = ArrayList<Message>()
-        MessageId.entries.forEach { messageID ->
-            //If the Id is in all lists, add message to the ArrayList
-            if (containsId(messageID, names, profilePicture)) {
-                messageData.add(
-                    Message(
-                        userName = names[messageID]!!,
-                        content = content[messageID]!!,
-                        userProfile = profilePicture[messageID]!!
-                    )
-                )
-            }
+        // Generate chatId, which is the two users, combined
+        // And generate messagesPath depending if global or private
+        // Ex. userId = "abc" and friendId = "bcd" -> chatId = "abc_bcd"
+        var chatId = "chatId"
+        var messagesPath = "messages"
+
+        // Exception: if friendId == null, its the global chat
+        if (friendId != null){
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            val chatIdArray = arrayOf(userId, friendId)
+            chatIdArray.sort()
+
+            chatId = chatIdArray.joinToString("_")
+            messagesPath = "chats/$chatId/messages"
         }
+        Log.i(TAG, chatId)
 
-        return messageData
+
+        //val friendDocument = getDocumentReference(db, "users", friendId.toString())
+
+        // Reads messages from chats/[chatId]/messages (global chat) into messageData arrayList
+        //val messageData = ArrayList<Map<String, Any>?>()
+        val messagesRef = db.collection(messagesPath)
+        messagesRef.addSnapshotListener { snapshot, e ->
+            chatList.clear()
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+            }
+
+            if (snapshot != null && !snapshot.isEmpty) {
+                for (document in snapshot.documents) {
+                    Log.d(TAG, "data: ${document.data}")
+                    chatList.add(document.data)
+                }
+            } else {
+                Log.d(TAG, "data: null")
+            }
+
+            val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
+            recyclerView.adapter = MessageAdapter(chatList)
+        }
     }
 
     /**
@@ -110,8 +137,5 @@ class ChatActivity : AppCompatActivity() {
             if (messageID !in it.keys) { return false }
         }
         return true
-    }
-    companion object {
-        private const val TAG = "EmailPassword"
     }
 }

@@ -7,14 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bonfire.R
+import com.google.type.DateTime
 
 // RecyclerView adapter for the scrollable messages view
-class MessageAdapter(private val data: List<Message>) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
+class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
     // Akin to onCreate method to initialize each instance (each message)
     inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val name: TextView = view.findViewById(R.id.message_user)
-        val content: TextView = view.findViewById(R.id.message_text)
-        val picture: ImageView = view.findViewById(R.id.message_profile)
+        val displayName: TextView = view.findViewById(R.id.message_user)
+        val photoURL: ImageView = view.findViewById(R.id.message_profile)
+        val text: TextView = view.findViewById(R.id.message_text)
+//        val timestamp: DateTime
+//        val uid: String
     }
 
     // Define each entry's layout/look
@@ -26,10 +29,10 @@ class MessageAdapter(private val data: List<Message>) : RecyclerView.Adapter<Mes
 
     //Set values to the views based on the position of the recyclerView
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val message : Message = data[position]
-        holder.name.text = message.userName
-        holder.content.text = message.content
-        holder.picture.setImageResource(message.userProfile)
+        val message : Map<String, Any>? = data[position]
+        holder.displayName.text = message?.get("displayName").toString()
+        holder.text.text = message?.get("text").toString()
+        //holder.photoURL.setImageResource(message.photoURL)
     }
 
     //  Total number of elements in recyclerView
