@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.Insets
@@ -13,24 +12,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bonfire.messagesRecycler.FakeRepository
-import com.example.bonfire.messagesRecycler.Message
 import com.example.bonfire.messagesRecycler.MessageAdapter
 import com.example.bonfire.messagesRecycler.MessageId
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.type.DateTime
 
 
 class ChatActivity : AppCompatActivity() {
     val TAG = "chat"
+    private lateinit var chatList: ArrayList<Map<String, Any>?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_layout)
+
 
         // read in friendId to open correct chat
         val b = intent.extras
@@ -39,10 +35,17 @@ class ChatActivity : AppCompatActivity() {
             friendId = null
         }
 
+        // Recycler view to display messages of chat
 
-        var recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-        recyclerView.adapter = MessageAdapter(createData(friendId))
+        chatList = arrayListOf()
+        createData(friendId)
+        //recyclerView.adapter = MessageAdapter()
+        val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        // Set chat name (global/name of person youre talking to)
+
 
 
         // Prevent dark mode
@@ -80,21 +83,16 @@ class ChatActivity : AppCompatActivity() {
      * Uses the repository to collect the raw data and bundles up those values
      * into our Message data class, something our adapter knows how to work with
      */
-    private fun createData(friendId: String?): List<Message> {
-        //Get data from the repository
-        val names = FakeRepository.messageUserName
-        val content = FakeRepository.messageContent
-        val profilePicture = FakeRepository.messageProfile
-
+    private fun createData(friendId: String?){
         val db = Firebase.firestore
 
         // Generate chatId, which is the two users, combined
+        // And generate messagesPath depending if global or private
         // Ex. userId = "abc" and friendId = "bcd" -> chatId = "abc_bcd"
-
-        // Exception is if friendId == null, therefore its the global chat
         var chatId = "chatId"
         var messagesPath = "messages"
 
+        // Exception: if friendId == null, its the global chat
         if (friendId != null){
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             val chatIdArray = arrayOf(userId, friendId)
@@ -105,50 +103,32 @@ class ChatActivity : AppCompatActivity() {
         }
         Log.i(TAG, chatId)
 
+
         //val friendDocument = getDocumentReference(db, "users", friendId.toString())
 
-        val messageData = ArrayList<Message>()
         // Reads messages from chats/[chatId]/messages (global chat) into messageData arrayList
-        db.collection(messagesPath)
-            .orderBy("timestamp")
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    messageData.add(
-                        Message(
-                            displayName = document.data["displayName"].toString(),
-                            photoURL = document.data["photoURL"].toString() ,
-                            text = document.data["text"].toString(),
-                            timestamp = document.data["timestamp"],
-                            uid = document.data["uid"].toString()
-                        )
-                    )
-                    Log.i( "chat", "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w( "Error getting documents: ", exception)
-                Toast.makeText(baseContext, "Error getting documents: " + exception, Toast.LENGTH_LONG).show()
+        //val messageData = ArrayList<Map<String, Any>?>()
+        val messagesRef = db.collection(messagesPath)
+        messagesRef.addSnapshotListener { snapshot, e ->
+            chatList.clear()
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
             }
 
-        return messageData
+            if (snapshot != null && !snapshot.isEmpty) {
+                for (document in snapshot.documents) {
+                    Log.d(TAG, "data: ${document.data}")
+                    chatList.add(document.data)
+                }
+            } else {
+                Log.d(TAG, "data: null")
+            }
+
+            val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
+            recyclerView.adapter = MessageAdapter(chatList)
+        }
     }
 
-    private fun getDocumentReference(db: FirebaseFirestore, collectionPath:String, documentPath:String) : DocumentReference{
-        val documentRef = db.collection(collectionPath).document(documentPath)
-        documentRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
-        return documentRef
-    }
     /**
      * Takes in a molecule id and checks if it is contained within all mappings passed
      */
