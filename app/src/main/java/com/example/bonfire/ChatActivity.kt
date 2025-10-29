@@ -12,8 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bonfire.messagesRecycler.MessageAdapter
-import com.example.bonfire.messagesRecycler.MessageId
+import com.example.bonfire.MessageAdapter
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -108,7 +107,7 @@ class ChatActivity : AppCompatActivity() {
 
         // Reads messages from chats/[chatId]/messages (global chat) into messageData arrayList
         //val messageData = ArrayList<Map<String, Any>?>()
-        val messagesRef = db.collection(messagesPath)
+        val messagesRef = db.collection(messagesPath).orderBy("timestamp")
         messagesRef.addSnapshotListener { snapshot, e ->
             chatList.clear()
             if (e != null) {
@@ -127,15 +126,5 @@ class ChatActivity : AppCompatActivity() {
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
             recyclerView.adapter = MessageAdapter(chatList)
         }
-    }
-
-    /**
-     * Takes in a molecule id and checks if it is contained within all mappings passed
-     */
-    private fun containsId(messageID: MessageId, vararg maps: Map<MessageId, Any>): Boolean {
-        maps.forEach {
-            if (messageID !in it.keys) { return false }
-        }
-        return true
     }
 }
