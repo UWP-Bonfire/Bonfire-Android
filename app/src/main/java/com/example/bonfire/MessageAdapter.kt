@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
@@ -33,8 +34,33 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val message : Map<String, Any>? = data[position]
         holder.displayNameTextView.text = message?.get("displayName").toString()
-        holder.textTextView.text = message?.get("text").toString()
+        holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
+
+        // ex. set message with "avatar" = "/images/icon1.png" to R.id.icon1
+        // --- Avatar mapping --- (terribly hardcoded)
+        val avatarPath = message["avatar"]?.toString()
+        val avatarResId = when (avatarPath) {
+            "/images/icon1.png" -> R.drawable.icon1
+            "/images/icon2.png" -> R.drawable.icon2
+            "/images/icon3.png" -> R.drawable.icon3
+            "/images/icon4.png" -> R.drawable.icon4
+            "/images/icon5.png" -> R.drawable.icon5
+            "/images/icon6.png" -> R.drawable.icon6
+            "/images/icon7.png" -> R.drawable.icon7
+            "/images/icon8.png" -> R.drawable.icon8
+            "/images/icon9.png" -> R.drawable.icon9
+            "/images/icon10.png" -> R.drawable.icon10
+            "/images/icon11.png" -> R.drawable.icon11
+            "/images/icon12.png" -> R.drawable.icon12
+            "/images/icon13.png" -> R.drawable.icon13
+            "/images/icon14.png" -> R.drawable.icon14
+            "/images/icon15.png" -> R.drawable.icon15
+            else -> R.drawable.default_pfp
+        }
+
+        holder.photoURLTextView.setImageResource(avatarResId)
+
         //holder.photoURL.setImageResource(message.photoURL)
     }
 

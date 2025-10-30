@@ -1,12 +1,16 @@
 package com.example.bonfire
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -43,9 +47,27 @@ class ChatActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        // Set chat name (global/name of person youre talking to)
-
-
+        // Set chat name (name of person you're talking to)
+        // if friendId == null, its the global chat
+        if (friendId != null){
+            // get name of friend
+            val db = Firebase.firestore
+            val docRef = db.collection("users").document(friendId)
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d("chatname", "DocumentSnapshot data: ${document.data}")
+                        val data = document.data
+                        val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
+                        chatName.text = (data?.get("displayName") ?: "") as String
+                    } else {
+                        Log.d("chatname", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("chatname", "get failed with ", exception)
+                }
+        }
 
         // Prevent dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -92,7 +114,7 @@ class ChatActivity : AppCompatActivity() {
         var messagesPath = "messages"
 
         // Exception: if friendId == null, its the global chat
-        if (friendId != null){
+            if (friendId != null){
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             val chatIdArray = arrayOf(userId, friendId)
             chatIdArray.sort()

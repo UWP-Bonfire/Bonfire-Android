@@ -68,142 +68,186 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:layout_gravity="center_horizontal"/>
+            
+                <GridLayout
+                    android:id="@+id/account_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:rowCount="3"
+                    android:columnCount="5"
+                    android:alignmentMode="alignBounds"
+                    android:useDefaultMargins="true"
+                    android:layout_margin="12dp">
 
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:rowCount="3"
-                android:columnCount="5"
+                    <!-- Row 1 -->
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon1"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
-                grid:alignmentMode="alignBounds"
-                grid:columnCount="5"
-                grid:rowOrderPreserved="false"
-                grid:useDefaultMargins="true"
-                android:layout_margin="12dp">
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    grid:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    android:src="@drawable/amaice_profile_picture"
-                    android:layout_gravity="center"
-                    app:shapeAppearanceOverlay="@style/Circular" />            </GridLayout>
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon2"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon2"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon3"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon3"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon4"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon4"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon5"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon5"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <!-- Row 2 -->
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon6"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon6"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon7"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon7"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon8"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon8"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon9"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon9"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon10"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon10"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <!-- Row 3 -->
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon11"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon11"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon12"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon12"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon13"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon13"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon14"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon14"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/icon15"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        android:src="@drawable/icon15"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:shapeAppearanceOverlay="@style/Circular" />
+                </GridLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
