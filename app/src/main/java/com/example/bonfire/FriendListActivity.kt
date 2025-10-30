@@ -1,20 +1,21 @@
 package com.example.bonfire
 
-import android.R.id
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 
 
-class GroupChatListActivity : AppCompatActivity() {
+class FriendListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.groupchat_list_layout)
+        setContentView(R.layout.friend_list_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
 
         val openChatButton: ImageButton = findViewById(R.id.text_chat_list_message)
         openChatButton.setOnClickListener {
@@ -30,10 +31,20 @@ class GroupChatListActivity : AppCompatActivity() {
         }
 
 
-        // go to friends screen
-        val friendButton: ImageButton = findViewById(R.id.menu_button_friends)
-        friendButton.setOnClickListener {
-            val intent = Intent(this, FriendListActivity::class.java)
+
+        // go to add friend screen
+        val friendAddButton: Button = findViewById(R.id.friend_add_button)
+        friendAddButton.setOnClickListener {
+            val intent = Intent(this, FriendAddActivity::class.java)
+            startActivity(intent)
+            // no finish() so that native android back arrow works
+        }
+
+
+        // go to chat screen
+        val chatButton: ImageButton = findViewById(R.id.menu_button_chat)
+        chatButton.setOnClickListener {
+            val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent)
             finish()
         }

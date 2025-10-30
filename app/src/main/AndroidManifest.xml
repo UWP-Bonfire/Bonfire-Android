@@ -38,7 +38,18 @@
             android:theme="@style/Theme.Bonfire">
         </activity>
         <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".FriendAddActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bonfire">
+        </activity>
+        <activity
             android:name=".GroupChatListActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bonfire">
+        </activity>
+        <activity
+            android:name=".FriendListActivity"
             android:exported="true"
             android:theme="@style/Theme.Bonfire">
         </activity>

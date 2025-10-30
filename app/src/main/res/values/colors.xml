@@ -14,6 +14,7 @@
     <color name="bg_yellow">#FFF59D</color>
     <color name="light_orange">#AC6855</color>
     <color name="light_brown">#FFD9BA</color>
+    <color name="very_light_brown">#FFF6F1</color>
     <color name="semi_dark_brown">#7C5442</color>
     <color name="dark_brown">#4B3329</color>
     <color name="dark_gray">#4B4B4B</color>
