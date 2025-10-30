@@ -1,26 +1,29 @@
 package com.example.bonfire
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
+import com.example.bonfire.ChatActivity.Companion.userAvatars
 
 // RecyclerView adapter for the scrollable messages view
 class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
+    val db = Firebase.firestore
+
     // Akin to onCreate method to initialize each instance (each message)
     inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val displayNameTextView: TextView = view.findViewById(R.id.message_user)
         val photoURLTextView: ImageView = view.findViewById(R.id.message_profile)
         val textTextView: TextView = view.findViewById(R.id.message_text)
         val timestampTextView: TextView = view.findViewById(R.id.message_timestamp)
-//        val uid: String
     }
 
     // Define each entry's layout/look
@@ -37,10 +40,26 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
 
-        // ex. set message with "avatar" = "/images/icon1.png" to R.id.icon1
-        // --- Avatar mapping --- (terribly hardcoded)
-        val avatarPath = message["avatar"]?.toString()
-        val avatarResId = when (avatarPath) {
+        // Load icon from uid
+        val uid : String = message["uid"].toString()
+        holder.photoURLTextView.setImageResource(userAvatars[uid]?: R.drawable.default_pfp)
+    }
+
+    fun formatTimestampToString(timestamp: Timestamp): String{
+        val timestampDate:Date = timestamp.toDate()
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm")
+        return dateFormat.format(timestampDate)
+    }
+
+    //  Total number of elements in recyclerView
+    override fun getItemCount(): Int {
+        return data.size
+    }
+
+    // ex. set message with "avatar" = "/images/icon1" to R.id.icon1
+    // --- Avatar mapping --- (terribly hardcoded)
+    fun getAvatarId(avatarPath: String?) : Int {
+        return when (avatarPath) {
             "/images/icon1.png" -> R.drawable.icon1
             "/images/icon2.png" -> R.drawable.icon2
             "/images/icon3.png" -> R.drawable.icon3
@@ -58,21 +77,5 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
             "/images/icon15.png" -> R.drawable.icon15
             else -> R.drawable.default_pfp
         }
-
-        holder.photoURLTextView.setImageResource(avatarResId)
-
-        //holder.photoURL.setImageResource(message.photoURL)
     }
-
-    fun formatTimestampToString(timestamp: Timestamp): String{
-        val timestampDate:Date = timestamp.toDate()
-        val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm");
-        return dateFormat.format(timestampDate);
-    }
-
-    //  Total number of elements in recyclerView
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
 }

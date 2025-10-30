@@ -2,7 +2,6 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:grid="http://schemas.android.com/tools"
     android:id="@+id/account_content"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
@@ -34,9 +33,10 @@
             >
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/account_avatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/amaice_profile_picture"
+                android:src="@drawable/default_pfp"
                 android:layout_margin="32dp"
                 android:layout_gravity="center_horizontal"
                 app:shapeAppearanceOverlay="@style/Circular" />

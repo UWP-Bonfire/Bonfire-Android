@@ -100,6 +100,7 @@
 
 
     <ImageView
+        android:clickable="true"
         android:id="@+id/chat_MessageBar_SendButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -112,18 +113,18 @@
         app:srcCompat="@drawable/send"
         app:tint="@color/white" />
 
-    <ImageView
-        android:id="@+id/chat_MessageBar_ImageButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_weight="0"
-        android:alpha=".8"
-        android:paddingStart="0dp"
-        android:paddingEnd="8dp"
-        android:layout_gravity="center"
-        android:contentDescription="Image send"
-        app:srcCompat="@drawable/image_area"
-        app:tint="@color/white" />
+<!--    <ImageView-->
+<!--        android:id="@+id/chat_MessageBar_ImageButton"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_weight="0"-->
+<!--        android:alpha=".8"-->
+<!--        android:paddingStart="0dp"-->
+<!--        android:paddingEnd="8dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:contentDescription="Image send"-->
+<!--        app:srcCompat="@drawable/image_area"-->
+<!--        app:tint="@color/white" />-->
 </LinearLayout>
 
 
