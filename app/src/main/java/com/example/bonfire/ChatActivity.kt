@@ -93,7 +93,7 @@ class ChatActivity : AppCompatActivity() {
                         //Log.d("chatname", "DocumentSnapshot data: ${document.data}")
                         val data = document.data
                         val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
-                        chatName.text = (data?.get("displayName") ?: "") as String
+                        chatName.text = (data?.get("name") ?: "") as String
                     } else {
                         Log.d("chatname", "No such document")
                     }

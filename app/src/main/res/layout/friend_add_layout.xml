@@ -2,7 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_content"
+    android:id="@+id/friend_add_content"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="false"
@@ -10,13 +10,13 @@
     android:background="@drawable/gradient_drawable">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/list_cardView"
+        android:id="@+id/friend_add_cardView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_weight="0"
         app:cardBackgroundColor="@color/dark_brown">
         <LinearLayout
-            android:id="@+id/chat_cardView_LinearLayout"
+            android:id="@+id/friend_add_cardView_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
@@ -25,20 +25,20 @@
             android:padding="3dp"
             android:paddingStart="10dp">
 
-        <ImageButton
-            android:id="@+id/friendadd_backArrow"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:srcCompat="@drawable/arrow_left"
-            app:tint="@color/white"
-            android:background="#00FFFFFF"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:padding="10dp"/>
+            <ImageButton
+                android:id="@+id/friend_add_backArrow"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:srcCompat="@drawable/arrow_left"
+                app:tint="@color/white"
+                android:background="#00FFFFFF"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:padding="10dp"/>
         </LinearLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/list_cardView_UserIcon"
+            android:id="@+id/friend_add_cardView_UserIcon"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
@@ -58,7 +58,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/friendlist_title"
+                android:id="@+id/friend_add_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Friend"
@@ -78,8 +78,8 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
-        android:id="@+id/list_messages_ScrollView"
+    <LinearLayout
+        android:id="@+id/friend_add_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -111,25 +111,36 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:padding="16dp"
-                    android:id="@+id/signin_email_input"
+                    android:id="@+id/friend_add_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="User ID"
+                    android:hint="Enter a username"
                     android:textSize="20dp"
-                    app:layout_constraintBottom_toTopOf="@+id/signin_password_input"
+                    app:layout_constraintBottom_toTopOf="@+id/friend_add_password_input"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signin_text">
+                    app:layout_constraintTop_toBottomOf="@+id/friend_add_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/signin_email_edit"
+                        android:id="@+id/friend_add_edit"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/friend_add_search_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
+                    android:backgroundTint="@color/semi_dark_brown"
+                    android:textColor="@color/white"
+                    android:layout_margin="6dp"
+                    android:text="Search"
+                    android:textSize="18dp"/>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-    </ScrollView>
+    </LinearLayout>
 
     <include layout="@layout/bottom_nav_layout"/>
 </LinearLayout>
