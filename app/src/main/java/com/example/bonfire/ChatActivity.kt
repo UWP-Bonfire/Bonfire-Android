@@ -121,6 +121,7 @@ class ChatActivity : AppCompatActivity() {
                     db.collection("messages").document().set(messageData)
                 }
                 emailEditText.setText("")
+                recyclerView.scrollToPosition(chatList.size - 1)
             }
         }
 
@@ -136,7 +137,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         // Reset layout when keyboard pulls up
-        val rootView = findViewById<View?>(android.R.id.content)
+        val rootView = findViewById<View?>(R.id.chat_content)
         if (rootView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(
                 rootView
@@ -144,6 +145,9 @@ class ChatActivity : AppCompatActivity() {
                 val imeInsets: Insets = insets!!.getInsets(WindowInsetsCompat.Type.ime())
                 val navInsets: Insets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 val bottomInset: Int = imeInsets.bottom.coerceAtLeast(navInsets.bottom)
+
+                recyclerView.scrollBy(0, bottomInset)
+                Log.d("chatname", "scrolled by " + bottomInset)
 
                 rootView.setPadding(
                     navInsets.left,
@@ -202,6 +206,8 @@ class ChatActivity : AppCompatActivity() {
 
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
             recyclerView.adapter = MessageAdapter(chatList)
+            // scroll to bottom
+            recyclerView.scrollToPosition(chatList.size - 1)
         }
     }
 
