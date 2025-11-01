@@ -82,8 +82,6 @@ class FriendAddActivity : AppCompatActivity() {
 
         // search for friend
         val docRef = db.collection("users").whereEqualTo("name", friendName)
-        var data : Map<String, Any> = mapOf()
-        var documentId = ""
         docRef.get()
         .addOnSuccessListener { documents ->
             if (!documents.isEmpty) {
