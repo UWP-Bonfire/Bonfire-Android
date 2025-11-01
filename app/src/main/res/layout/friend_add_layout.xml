@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:textSize="16dp"
-                    android:text="Enter the user ID of the person you want to connect with. You can find your user ID in your profile."/>
+                    android:text="Search for users by their username and send them a friend request."/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:padding="16dp"

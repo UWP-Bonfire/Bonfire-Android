@@ -215,6 +215,7 @@ class ChatActivity : AppCompatActivity() {
     // --- Avatar mapping --- (terribly hardcoded)
     fun getAvatarId(avatarPath: String) : Int {
         return when (avatarPath) {
+            "/images/Logo.png" -> R.drawable.bonfire_icon
             "/images/icon1.png" -> R.drawable.icon1
             "/images/icon2.png" -> R.drawable.icon2
             "/images/icon3.png" -> R.drawable.icon3
