@@ -18,6 +18,7 @@ import androidx.core.view.size
 
 class AccountActivity : AppCompatActivity() {
     lateinit var TAG:String
+    val helper = Helper()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class AccountActivity : AppCompatActivity() {
                 accountUserText.text = (data?.get("name") ?: "") as String
 
                 val avatarPath = data?.get("avatar")?.toString()
-                accountAvatarImageView.setImageResource(getAvatarId(avatarPath))
+                accountAvatarImageView.setImageResource(helper.getAvatarId(avatarPath))
             } else {
                 Log.d(TAG, "No such document")
             }
@@ -67,7 +68,8 @@ class AccountActivity : AppCompatActivity() {
                     .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
                 // visually change icon
                 val accountAvatarImageView: ShapeableImageView = findViewById(R.id.account_avatar)
-                accountAvatarImageView.setImageResource(getAvatarId(avatar))
+                val helper = Helper()
+                accountAvatarImageView.setImageResource(helper.getAvatarId(avatar))
             }
         }
 
@@ -96,30 +98,6 @@ class AccountActivity : AppCompatActivity() {
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
-        }
-    }
-
-    // load avatar, ex."/images/icon1" to R.id.icon1
-    // --- Avatar mapping --- (terribly hardcoded)
-    fun getAvatarId(avatarPath: String?) : Int {
-        return when (avatarPath) {
-            "/images/Logo.png" -> R.drawable.bonfire_icon
-            "/images/icon1.png" -> R.drawable.icon1
-            "/images/icon2.png" -> R.drawable.icon2
-            "/images/icon3.png" -> R.drawable.icon3
-            "/images/icon4.png" -> R.drawable.icon4
-            "/images/icon5.png" -> R.drawable.icon5
-            "/images/icon6.png" -> R.drawable.icon6
-            "/images/icon7.png" -> R.drawable.icon7
-            "/images/icon8.png" -> R.drawable.icon8
-            "/images/icon9.png" -> R.drawable.icon9
-            "/images/icon10.png" -> R.drawable.icon10
-            "/images/icon11.png" -> R.drawable.icon11
-            "/images/icon12.png" -> R.drawable.icon12
-            "/images/icon13.png" -> R.drawable.icon13
-            "/images/icon14.png" -> R.drawable.icon14
-            "/images/icon15.png" -> R.drawable.icon15
-            else -> R.drawable.default_pfp
         }
     }
 }

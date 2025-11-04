@@ -37,7 +37,7 @@ class ChatActivity : AppCompatActivity() {
 
         // read in friendId to open correct chat
         val b = intent.extras
-        var friendId: String? = b!!.getString("id")
+        var friendId: String? = b?.getString("id") ?: ""
         if(friendId == ""){
             friendId = null
         }
@@ -65,7 +65,8 @@ class ChatActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     // ex. uid : R.drawable.icon1
-                    userAvatars.put(document.id, getAvatarId(document.data["avatar"] as String))
+                    val helper = Helper()
+                    userAvatars.put(document.id, helper.getAvatarId(document.data["avatar"] as String))
                     //Log.d(TAG, "${document.id} => ${document.data["avatar"] as String}")
                 }
                 // Load chat after all avatars have been "cached"
@@ -124,6 +125,32 @@ class ChatActivity : AppCompatActivity() {
                 recyclerView.scrollToPosition(chatList.size - 1)
             }
         }
+        else{
+            // send message in private message with friend
+            val chatIdArray = arrayOf(uid, friendId)
+            chatIdArray.sort()
+            val chatId = chatIdArray.joinToString("_")
+            val messagesPath = "chats/$chatId/messages"
+
+            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
+            sendButton.setOnClickListener {
+                val emailEditText: TextInputEditText =
+                    findViewById(R.id.chat_MessageBar_TextInputEditText)
+                val messageSend = emailEditText.getText().toString()
+                if (messageSend != "") {
+                    val messageData = hashMapOf(
+                        "displayName" to userData["name"],
+                        "photoURL" to userData["avatar"],
+                        "senderId" to uid,
+                        "text" to messageSend,
+                        "timestamp" to Timestamp.now(),
+                    )
+                    db.collection(messagesPath).document().set(messageData)
+                }
+                emailEditText.setText("")
+                recyclerView.scrollToPosition(chatList.size - 1)
+            }
+        }
 
         // Prevent dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -170,7 +197,7 @@ class ChatActivity : AppCompatActivity() {
         // Generate chatId, which is the two users, combined
         // And generate messagesPath depending if global or private
         // Ex. userId = "abc" and friendId = "bcd" -> chatId = "abc_bcd"
-        var chatId = "chatId"
+        var chatId = ""
         var messagesPath = "messages"
 
         // Exception: if friendId == null, its the global chat
@@ -208,30 +235,6 @@ class ChatActivity : AppCompatActivity() {
             recyclerView.adapter = MessageAdapter(chatList)
             // scroll to bottom
             recyclerView.scrollToPosition(chatList.size - 1)
-        }
-    }
-
-    // ex. set message with "avatar" = "/images/icon1" to R.id.icon1
-    // --- Avatar mapping --- (terribly hardcoded)
-    fun getAvatarId(avatarPath: String) : Int {
-        return when (avatarPath) {
-            "/images/Logo.png" -> R.drawable.bonfire_icon
-            "/images/icon1.png" -> R.drawable.icon1
-            "/images/icon2.png" -> R.drawable.icon2
-            "/images/icon3.png" -> R.drawable.icon3
-            "/images/icon4.png" -> R.drawable.icon4
-            "/images/icon5.png" -> R.drawable.icon5
-            "/images/icon6.png" -> R.drawable.icon6
-            "/images/icon7.png" -> R.drawable.icon7
-            "/images/icon8.png" -> R.drawable.icon8
-            "/images/icon9.png" -> R.drawable.icon9
-            "/images/icon10.png" -> R.drawable.icon10
-            "/images/icon11.png" -> R.drawable.icon11
-            "/images/icon12.png" -> R.drawable.icon12
-            "/images/icon13.png" -> R.drawable.icon13
-            "/images/icon14.png" -> R.drawable.icon14
-            "/images/icon15.png" -> R.drawable.icon15
-            else -> R.drawable.default_pfp
         }
     }
 }

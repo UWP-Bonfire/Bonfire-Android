@@ -31,18 +31,15 @@
         android:orientation="vertical"
         android:layout_weight="1">
         <LinearLayout
+            android:id="@+id/list_messages_LinearLayout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp">
 
             <include
-                android:id="@+id/bottom_nav"
+                android:id="@+id/global_chat"
                 layout="@layout/groupchat_layout"/>
-
-            <include
-                layout="@layout/friend_layout"/>
-
         </LinearLayout>
     </ScrollView>
 

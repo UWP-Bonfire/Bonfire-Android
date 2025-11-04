@@ -253,7 +253,7 @@
     </androidx.cardview.widget.CardView>
 
     <include
-        android:id="@+id/bottom_nav"
+        android:id="@+id/global_chat"
         layout="@layout/bottom_nav_layout"
         android:layout_height="130dp"
         android:layout_width="match_parent"
