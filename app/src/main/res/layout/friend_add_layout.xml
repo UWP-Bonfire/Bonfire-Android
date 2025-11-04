@@ -24,17 +24,6 @@
             android:orientation="horizontal"
             android:padding="3dp"
             android:paddingStart="10dp">
-
-            <ImageButton
-                android:id="@+id/friend_add_backArrow"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:srcCompat="@drawable/arrow_left"
-                app:tint="@color/white"
-                android:background="#00FFFFFF"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"
-                android:padding="10dp"/>
         </LinearLayout>
 
         <com.google.android.material.imageview.ShapeableImageView

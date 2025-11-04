@@ -42,7 +42,7 @@ class ChatActivity : AppCompatActivity() {
             friendId = null
         }
 
-        // data of user so you don't have to request it every time
+        // get data of user so you don't have to request it every time
         var userData : Map<String, Object> = mapOf()
         val docRef = db.collection("users").document(uid?: "")
         docRef.get()

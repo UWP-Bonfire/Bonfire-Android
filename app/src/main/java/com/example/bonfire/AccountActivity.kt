@@ -71,7 +71,10 @@ class AccountActivity : AppCompatActivity() {
             }
         }
 
+        defineBottomNavButtons()
+    }
 
+    private fun defineBottomNavButtons() {
         // go to chat screen
         val chatButton: ImageButton = findViewById(R.id.menu_button_chat)
         chatButton.setOnClickListener {
@@ -82,7 +85,7 @@ class AccountActivity : AppCompatActivity() {
         // go to friends screen
         val friendButton: ImageButton = findViewById(R.id.menu_button_friends)
         friendButton.setOnClickListener {
-            val intent = Intent(this, FriendListActivity::class.java)
+            val intent = Intent(this, FriendAddActivity::class.java)
             startActivity(intent)
         }
 

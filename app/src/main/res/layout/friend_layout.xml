@@ -9,48 +9,48 @@
 
     <!--Message -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/friend_chat_card"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/card_chat_list_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         style="@style/CardStyle">
         <LinearLayout
-            android:id="@+id/layout_chat_list_container"
+            android:id="@+id/friend_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp">
             <!-- User icon -->
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_chat_list_profile"
+                android:id="@+id/friend_profile"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="User Icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:srcCompat="@drawable/amaice_profile_picture" />
+                app:srcCompat="@drawable/default_pfp" />
 
 
             <!--User name-->
             <TextView
-                android:id="@+id/text_chat_list_user"
+                android:id="@+id/friend_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="amaice"
+                android:text="Loading..."
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
 
             <ImageButton
-                android:id="@+id/text_chat_list_message"
+                android:id="@+id/friend_chat_button"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/chat_bubble"

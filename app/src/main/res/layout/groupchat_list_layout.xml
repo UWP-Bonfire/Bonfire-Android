@@ -40,6 +40,9 @@
                 android:id="@+id/bottom_nav"
                 layout="@layout/groupchat_layout"/>
 
+            <include
+                layout="@layout/friend_layout"/>
+
         </LinearLayout>
     </ScrollView>
 

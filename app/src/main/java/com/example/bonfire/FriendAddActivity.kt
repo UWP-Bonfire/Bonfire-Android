@@ -34,26 +34,16 @@ class FriendAddActivity : AppCompatActivity() {
             sendFriendRequest(friendName)
         }
 
+        defineBottomNavButtons()
+    }
+
+    private fun defineBottomNavButtons() {
         // go to chat screen
         val chatButton: ImageButton = findViewById(R.id.menu_button_chat)
         chatButton.setOnClickListener {
             val intent = Intent(this, GroupChatListActivity::class.java)
             startActivity(intent)
             finish()
-        }
-
-        // go to back friends screen
-        val friendBackButton: ImageButton = findViewById(R.id.friend_add_backArrow)
-        friendBackButton.setOnClickListener {
-            val intent = Intent(this, FriendListActivity::class.java)
-            startActivity(intent)
-        }
-
-        // go to friends screen
-        val friendButton: ImageButton = findViewById(R.id.menu_button_friends)
-        friendButton.setOnClickListener {
-            val intent = Intent(this, FriendListActivity::class.java)
-            startActivity(intent)
         }
 
         // go to accounts screen
