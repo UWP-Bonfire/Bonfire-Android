@@ -116,11 +116,14 @@ class FriendAddActivity : AppCompatActivity() {
         }
 
         // If found a user, check they're not already friends
-        for (otherUserFriends in (data["friends"] as List<*>)){
-            if (otherUserFriends == uid){
-                Toast.makeText(baseContext, "You are already friends with this user.", Toast.LENGTH_SHORT).show()
-                Log.d(TAG, "Already friends with $uid")
-                return false
+        // if data["friends"] is null, that person has no friends, and cannot be friends with you
+        if (data["friends"] != null){
+            for (otherUserFriends in (data["friends"] as List<*>)){
+                if (otherUserFriends == uid){
+                    Toast.makeText(baseContext, "You are already friends with this user.", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "Already friends with $uid")
+                    return false
+                }
             }
         }
 
