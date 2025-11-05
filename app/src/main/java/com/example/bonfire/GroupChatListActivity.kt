@@ -76,7 +76,7 @@ class GroupChatListActivity : AppCompatActivity() {
                     val friendName : TextView = friendView.findViewById(R.id.text_chat_list_user)
                     friendName.text = friendData?.get("name") as String
 
-                    val friendAvatar : ShapeableImageView = friendView.findViewById(R.id.friend_profile)
+                    val friendAvatar : ShapeableImageView = friendView.findViewById(R.id.friend_request_avatar)
                     friendAvatar.setImageResource(helper.getAvatarId(friendData["avatar"] as String?))
 
                     // Generate button listener that will open chat with friend
