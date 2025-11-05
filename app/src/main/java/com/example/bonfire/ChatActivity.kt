@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.Insets
@@ -12,40 +14,137 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bonfire.MessageAdapter
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 
 
 class ChatActivity : AppCompatActivity() {
     val TAG = "chat"
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
+    val db = Firebase.firestore
+    val helper = Helper()
     private lateinit var chatList: ArrayList<Map<String, Any>?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_layout)
 
-
         // read in friendId to open correct chat
         val b = intent.extras
-        var friendId: String? = b!!.getString("id")
+        var friendId: String? = b?.getString("id") ?: ""
         if(friendId == ""){
             friendId = null
         }
 
-        // Recycler view to display messages of chat
+        // get data of user so you don't have to request it every time
+        var userData : Map<String, Object> = mapOf()
+        val docRef = db.collection("users").document(uid?: "")
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    userData = document.data as Map<String, Object>
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
 
-        chatList = arrayListOf()
-        createData(friendId)
+        // Recycler view to display messages of chat //
+
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                createData(friendId)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+
+
         //recyclerView.adapter = MessageAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        // Set chat name (global/name of person youre talking to)
+        // Set chat name (name of person you're talking to)
+        // if friendId == null, its the global chat
+        if (friendId != null){
+            // get name of friend
+            val docRef = db.collection("users").document(friendId)
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        //Log.d("chatname", "DocumentSnapshot data: ${document.data}")
+                        val data = document.data
+                        val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
+                        chatName.text = (data?.get("name") ?: "") as String
 
+                        val friendAvatar : ShapeableImageView = findViewById(R.id.chat_cardView_UserIcon)
+                        friendAvatar.setImageResource(helper.getAvatarId(data?.get("avatar")?.toString()))
 
+                    } else {
+                        Log.d("chatname", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("chatname", "get failed with ", exception)
+                }
+        }
+
+        // Send message
+        // if friendId == null, we are in global chat
+        if (friendId == null){
+            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
+            sendButton.setOnClickListener {
+                val emailEditText:  TextInputEditText = findViewById(R.id.chat_MessageBar_TextInputEditText)
+                val messageSend = emailEditText.getText().toString()
+                if (messageSend != ""){
+                    val messageData = hashMapOf(
+                        "displayName" to userData["name"],
+                        "photoURL" to userData["avatar"],
+                        "read" to false,
+                        "senderId" to uid,
+                        "text" to messageSend,
+                        "timestamp" to Timestamp.now(),
+                    )
+                    db.collection("messages").document().set(messageData)
+                }
+                emailEditText.setText("")
+                recyclerView.scrollToPosition(chatList.size - 1)
+            }
+        }
+        else{
+            // send message in private message with friend
+            val chatIdArray = arrayOf(uid, friendId)
+            chatIdArray.sort()
+            val chatId = chatIdArray.joinToString("_")
+            val messagesPath = "chats/$chatId/messages"
+
+            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
+            sendButton.setOnClickListener {
+                val emailEditText: TextInputEditText =
+                    findViewById(R.id.chat_MessageBar_TextInputEditText)
+                val messageSend = emailEditText.getText().toString()
+                if (messageSend != "") {
+                    val messageData = hashMapOf(
+                        "displayName" to userData["name"],
+                        "photoURL" to userData["avatar"],
+                        "senderId" to uid,
+                        "text" to messageSend,
+                        "timestamp" to Timestamp.now(),
+                    )
+                    db.collection(messagesPath).document().set(messageData)
+                }
+                emailEditText.setText("")
+                recyclerView.scrollToPosition(chatList.size - 1)
+            }
+        }
 
         // Prevent dark mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -54,11 +153,12 @@ class ChatActivity : AppCompatActivity() {
         val loginButton: ImageButton = findViewById(R.id.chat_cardView_backArrow)
         loginButton.setOnClickListener {
             val intent = Intent(this, GroupChatListActivity::class.java)
-            startActivity(intent);
+            startActivity(intent)
+            finish()
         }
 
         // Reset layout when keyboard pulls up
-        val rootView = findViewById<View?>(android.R.id.content)
+        val rootView = findViewById<View?>(R.id.chat_content)
         if (rootView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(
                 rootView
@@ -66,6 +166,9 @@ class ChatActivity : AppCompatActivity() {
                 val imeInsets: Insets = insets!!.getInsets(WindowInsetsCompat.Type.ime())
                 val navInsets: Insets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 val bottomInset: Int = imeInsets.bottom.coerceAtLeast(navInsets.bottom)
+
+                recyclerView.scrollBy(0, bottomInset)
+                Log.d("chatname", "scrolled by " + bottomInset)
 
                 rootView.setPadding(
                     navInsets.left,
@@ -88,13 +191,12 @@ class ChatActivity : AppCompatActivity() {
         // Generate chatId, which is the two users, combined
         // And generate messagesPath depending if global or private
         // Ex. userId = "abc" and friendId = "bcd" -> chatId = "abc_bcd"
-        var chatId = "chatId"
+        var chatId = ""
         var messagesPath = "messages"
 
         // Exception: if friendId == null, its the global chat
-        if (friendId != null){
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-            val chatIdArray = arrayOf(userId, friendId)
+            if (friendId != null){
+            val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
 
             chatId = chatIdArray.joinToString("_")
@@ -116,7 +218,7 @@ class ChatActivity : AppCompatActivity() {
 
             if (snapshot != null && !snapshot.isEmpty) {
                 for (document in snapshot.documents) {
-                    Log.d(TAG, "data: ${document.data}")
+                    //Log.d(TAG, "data: ${document.data}")
                     chatList.add(document.data)
                 }
             } else {
@@ -125,6 +227,8 @@ class ChatActivity : AppCompatActivity() {
 
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
             recyclerView.adapter = MessageAdapter(chatList)
+            // scroll to bottom
+            recyclerView.scrollToPosition(chatList.size - 1)
         }
     }
 }
