@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -34,9 +35,11 @@ class GroupChatListActivity : AppCompatActivity() {
         userRef.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                userData = document.data as Map<String, Object>
-                populateFriendList(db, userData["friends"] as List<String>)
-                Log.d(TAG, "${userData["friends"].toString()} user friend list found")
+                if (document.data?.get("friends") != null){
+                    userData = document.data as Map<String, Object>
+                    populateFriendList(db, userData["friends"] as List<String>)
+                    Log.d(TAG, "${userData["friends"].toString()} user friend list found")
+                }
             } else {
                 Log.d(TAG, "No such document")
             }
