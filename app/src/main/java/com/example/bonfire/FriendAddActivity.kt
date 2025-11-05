@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewManager
 import android.widget.Button
 import android.widget.ImageButton
@@ -50,9 +51,11 @@ class FriendAddActivity : AppCompatActivity() {
         val friendsRef = db.collection("friendRequests").whereEqualTo("to", uid.toString())
         friendsRef.get()
         .addOnSuccessListener { friendRequestDocs ->
-            if (friendRequestDocs != null) {
+            Log.d(TAG, "if (friendRequestDocs != null is ${friendRequestDocs != null}")
+            if (!friendRequestDocs.isEmpty) {
                 for (friendRequestDoc in friendRequestDocs){
                     val requesterUid = friendRequestDoc.data["from"] as String
+                    Log.d(TAG, "if (friendRequestDocs != null is ${friendRequestDocs != null}")
 
                     generateFriendRequestView(requesterUid, friendRequestLinearlayout)
                 }
@@ -61,6 +64,8 @@ class FriendAddActivity : AppCompatActivity() {
                 Log.d(TAG, "No friends haha")
                 val noFriendText = TextView(this)
                 noFriendText.text = "You have no pending friend requests."
+                noFriendText.setPadding(16, 16, 16, 16)
+                noFriendText.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 friendRequestLinearlayout.addView(noFriendText);
             }
         }
@@ -70,6 +75,7 @@ class FriendAddActivity : AppCompatActivity() {
     }
 
     fun generateFriendRequestView(requesterUid:String, friendRequestLinearlayout: LinearLayout){
+        Log.d(TAG, "generateFriendRequestView")
         // Get data of friend requester and generate view
         var requesterData : Map<String, Object>
         val requesterRef = db.collection("users").document(requesterUid)
