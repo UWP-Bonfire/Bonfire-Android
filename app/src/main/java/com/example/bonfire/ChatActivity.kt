@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
@@ -25,11 +26,8 @@ class ChatActivity : AppCompatActivity() {
     val TAG = "chat"
     val uid = FirebaseAuth.getInstance().currentUser?.uid
     val db = Firebase.firestore
+    val helper = Helper()
     private lateinit var chatList: ArrayList<Map<String, Any>?>
-
-    companion object {
-        var userAvatars : MutableMap<String, Int> = mutableMapOf()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,18 +57,9 @@ class ChatActivity : AppCompatActivity() {
 
         // Recycler view to display messages of chat //
 
-        // Load all users icons into a dictionary (instead of finding their icon FOR EACH message)
         db.collection("users")
             .get()
             .addOnSuccessListener { result ->
-                for (document in result) {
-                    // ex. uid : R.drawable.icon1
-                    val helper = Helper()
-                    userAvatars.put(document.id, helper.getAvatarId(document.data["avatar"] as String))
-                    //Log.d(TAG, "${document.id} => ${document.data["avatar"] as String}")
-                }
-                // Load chat after all avatars have been "cached"
-                chatList = arrayListOf()
                 createData(friendId)
             }
             .addOnFailureListener { exception ->
@@ -95,6 +84,10 @@ class ChatActivity : AppCompatActivity() {
                         val data = document.data
                         val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
                         chatName.text = (data?.get("name") ?: "") as String
+
+                        val friendAvatar : ShapeableImageView = findViewById(R.id.chat_cardView_UserIcon)
+                        friendAvatar.setImageResource(helper.getAvatarId(data?.get("avatar")?.toString()))
+
                     } else {
                         Log.d("chatname", "No such document")
                     }

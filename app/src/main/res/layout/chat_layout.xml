@@ -40,11 +40,12 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/chat_cardView_UserIcon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 app:shapeAppearanceOverlay="@style/Circular"
                 app:srcCompat="@drawable/chat_bubble"
-                android:tint="@color/white"/>
+                android:scaleType="fitCenter"
+                android:layout_gravity="bottom"/>
 
             <TextView
                 android:id="@+id/chat_cardView_UserName"

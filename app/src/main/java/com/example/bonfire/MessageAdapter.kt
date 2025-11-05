@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Date
-import com.example.bonfire.ChatActivity.Companion.userAvatars
 
 // RecyclerView adapter for the scrollable messages view
 class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
+    val helper = Helper()
+
     // Akin to onCreate method to initialize each instance (each message)
     inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val displayNameTextView: TextView = view.findViewById(R.id.message_user)
@@ -37,10 +36,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
         holder.displayNameTextView.text = message?.get("displayName").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
-
-        // Load icon from uid
-        val uid : String = message["uid"].toString()
-        holder.photoURLTextView.setImageResource(userAvatars[uid]?: R.drawable.default_pfp)
+        holder.photoURLTextView.setImageResource(helper.getAvatarId(message["photoURL"] as String?))
     }
 
     fun formatTimestampToString(timestamp: Timestamp): String{
