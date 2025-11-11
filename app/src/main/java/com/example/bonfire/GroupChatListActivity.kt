@@ -35,7 +35,9 @@ class GroupChatListActivity : AppCompatActivity() {
         .addOnSuccessListener { document ->
             if (document != null) {
                 userData = document.data as Map<String, Object>
-                populateFriendList(db, userData["friends"] as List<String>)
+                if (userData["friends"] != null){
+                    populateFriendList(db, userData["friends"] as List<String>)
+                }
                 Log.d(TAG, "${userData["friends"].toString()} user friend list found")
             } else {
                 Log.d(TAG, "No such document")

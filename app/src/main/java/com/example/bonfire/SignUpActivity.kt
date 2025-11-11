@@ -67,21 +67,7 @@ class SignUpActivity : AppCompatActivity() {
             makeToast("Please fill out all fields")
             return
         }
-
-        // Check if username isnt taken
-        val usersRef = db.collection("users").whereEqualTo("name", username)
-        usersRef.get()
-        .addOnSuccessListener { querySnapshot ->
-            if (!querySnapshot.isEmpty) {
-                makeToast("An account with this email already exists.")
-            } else {
-                Log.d(TAG, "No such document")
-                makeAccount(auth, db, username, email, password)
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
+        makeAccount(auth, db, username, email, password)
     }
 
     fun makeAccount(auth: FirebaseAuth, db: FirebaseFirestore, username:String, email:String, password:String){

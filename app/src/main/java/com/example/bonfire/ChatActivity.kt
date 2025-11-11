@@ -27,7 +27,7 @@ class ChatActivity : AppCompatActivity() {
     val uid = FirebaseAuth.getInstance().currentUser?.uid
     val db = Firebase.firestore
     val helper = Helper()
-    private lateinit var chatList: ArrayList<Map<String, Any>?>
+    private var chatList: ArrayList<Map<String, Any>?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
