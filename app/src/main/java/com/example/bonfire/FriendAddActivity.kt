@@ -3,15 +3,22 @@ package com.example.bonfire
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewManager
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 
 
@@ -19,6 +26,7 @@ class FriendAddActivity : AppCompatActivity() {
     val TAG = "friend add"
     val uid = FirebaseAuth.getInstance().currentUser?.uid
     val db = Firebase.firestore
+    val helper = Helper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +38,105 @@ class FriendAddActivity : AppCompatActivity() {
         friendAddButton.setOnClickListener {
             val friendEditText: TextInputEditText = findViewById(R.id.friend_add_edit)
             val friendName = friendEditText.getText().toString()
-
             sendFriendRequest(friendName)
         }
 
+        populateFriendRequestList()
         defineBottomNavButtons()
+    }
+
+    fun populateFriendRequestList(){
+        // generate pending friend requests sent to you
+        val friendRequestLinearlayout : LinearLayout = findViewById(R.id.friend_request_linearLayout)
+        val friendsRef = db.collection("friendRequests").whereEqualTo("to", uid.toString())
+        friendsRef.get()
+        .addOnSuccessListener { friendRequestDocs ->
+            Log.d(TAG, "if (friendRequestDocs != null is ${friendRequestDocs != null}")
+            if (!friendRequestDocs.isEmpty) {
+                for (friendRequestDoc in friendRequestDocs){
+                    val requesterUid = friendRequestDoc.data["from"] as String
+                    Log.d(TAG, "if (friendRequestDocs != null is ${friendRequestDocs != null}")
+
+                    generateFriendRequestView(requesterUid, friendRequestLinearlayout)
+                }
+            } else {
+                // Add text that says you have no friend requests
+                Log.d(TAG, "No friends haha")
+                val noFriendText = TextView(this)
+                noFriendText.text = "You have no pending friend requests."
+                noFriendText.setPadding(16, 16, 16, 16)
+                noFriendText.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                friendRequestLinearlayout.addView(noFriendText);
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+    }
+
+    fun generateFriendRequestView(requesterUid:String, friendRequestLinearlayout: LinearLayout){
+        Log.d(TAG, "generateFriendRequestView")
+        // Get data of friend requester and generate view
+        var requesterData : Map<String, Object>
+        val requesterRef = db.collection("users").document(requesterUid)
+        requesterRef.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                // Generate view
+                requesterData = document.data as Map<String, Object>
+                val requestView = LayoutInflater.from(this).inflate(R.layout.friend_request_layout, null, false)
+
+                val requesterName : TextView = requestView.findViewById(R.id.friend_request_name)
+                requesterName.text = requesterData["name"] as String
+
+                val requesterAvatar : ShapeableImageView = requestView.findViewById(R.id.friend_request_avatar)
+                requesterAvatar.setImageResource(helper.getAvatarId(requesterData["avatar"] as String?))
+
+                val acceptButton : ImageButton = requestView.findViewById(R.id.friend_request_yes)
+                acceptButton.setOnClickListener{
+                    addFriend(requesterUid)
+                    (requestView.parent as ViewManager).removeView(requestView)
+                }
+
+                val declineButton : ImageButton = requestView.findViewById(R.id.friend_request_no)
+                declineButton.setOnClickListener{
+                    declineFriend(requesterUid)
+                    (requestView.parent as ViewManager).removeView(requestView)
+                }
+
+                friendRequestLinearlayout.addView(requestView)
+            } else {
+                Log.d(TAG, "No such document")
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+    }
+
+    fun addFriend(requesterUid:String){
+        // add user to requester's friends
+        val docRef = db.collection("users").document(requesterUid)
+        docRef.update("friends", FieldValue.arrayUnion(uid.toString()))
+
+        // add requester to user friend
+        val userRef = db.collection("users").document(uid.toString())
+        userRef.update("friends", FieldValue.arrayUnion(requesterUid))
+    }
+
+    fun declineFriend(requesterUid:String){
+        // delete document in /friendRequests
+
+        val friendRequestArray = arrayOf(uid, requesterUid)
+        friendRequestArray.sort()
+        val friendRequestId = friendRequestArray.joinToString("_")
+
+
+
+        db.collection("friendRequests").document(friendRequestId)
+            .delete()
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
     }
 
     private fun defineBottomNavButtons() {
