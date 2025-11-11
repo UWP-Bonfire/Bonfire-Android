@@ -122,6 +122,10 @@ class FriendAddActivity : AppCompatActivity() {
         // add requester to user friend
         val userRef = db.collection("users").document(uid.toString())
         userRef.update("friends", FieldValue.arrayUnion(requesterUid))
+
+        // ironically call declineFriend() (which just deletes the friend request document)
+        // once you've accepted a friend request, you don't want it still there
+        declineFriend(requesterUid)
     }
 
     fun declineFriend(requesterUid:String){
