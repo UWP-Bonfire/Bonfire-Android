@@ -22,7 +22,7 @@
             android:padding="10dp">
             <!-- User icon -->
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/friend_request_avatar"
+                android:id="@+id/text_chat_list_avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
