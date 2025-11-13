@@ -72,10 +72,9 @@ class ChatActivity : AppCompatActivity() {
 
 
         // Set chat name (name of person you're talking to)
-        // if friendId == null, its the global chat
-        if (friendId != null){
+        if (isPrivateMessage(friendId)){
             // get name of friend
-            val docRef = db.collection("users").document(friendId)
+            val docRef = db.collection("users").document(friendId.toString())
             docRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -102,8 +101,7 @@ class ChatActivity : AppCompatActivity() {
         // if friendId == null, we are in global chat
         var messagesPath = "messages"
 
-        // if not null, its a private message with a friend, which has a different id and path
-        if (friendId != null){
+        if (isPrivateMessage(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
             val chatId = chatIdArray.joinToString("_")
@@ -164,10 +162,6 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    fun createSendMessageButtonListener(friendId:String?, userData:Map<String, Any>, recyclerView:RecyclerView){
-
-    }
-
     /**
      * Uses the repository to collect the raw data and bundles up those values
      * into our Message data class, something our adapter knows how to work with
@@ -181,8 +175,7 @@ class ChatActivity : AppCompatActivity() {
         var chatId = ""
         var messagesPath = "messages"
 
-        // Exception: if friendId == null, its the global chat
-            if (friendId != null){
+        if (isPrivateMessage(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
 
@@ -205,6 +198,13 @@ class ChatActivity : AppCompatActivity() {
 
             if (snapshot != null && !snapshot.isEmpty) {
                 for (document in snapshot.documents) {
+                    // if someone else sent the message, mark it read
+                    if (document.data?.get("senderId") != uid){
+                        document.reference.update( mapOf(
+                            "read" to true
+                        ))
+                    }
+
                     //Log.d(TAG, "data: ${document.data}")
                     chatList.add(document.data)
                 }
@@ -217,5 +217,9 @@ class ChatActivity : AppCompatActivity() {
             // scroll to bottom
             recyclerView.scrollToPosition(chatList.size - 1)
         }
+    }
+
+    fun isPrivateMessage(friendId:String?) : Boolean{
+        return friendId != null
     }
 }
