@@ -108,7 +108,7 @@ class ChatActivity : AppCompatActivity() {
                     val messageData = hashMapOf(
                         "displayName" to userData["name"],
                         "photoURL" to userData["avatar"],
-                        "read" to false,
+                        "read" to false,    // unneeded but web does it, soooo
                         "senderId" to uid,
                         "text" to messageSend,
                         "timestamp" to Timestamp.now(),
@@ -135,6 +135,7 @@ class ChatActivity : AppCompatActivity() {
                     val messageData = hashMapOf(
                         "displayName" to userData["name"],
                         "photoURL" to userData["avatar"],
+                        "read" to false,
                         "senderId" to uid,
                         "text" to messageSend,
                         "timestamp" to Timestamp.now(),
