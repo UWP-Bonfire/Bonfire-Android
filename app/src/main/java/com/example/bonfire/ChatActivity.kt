@@ -67,7 +67,6 @@ class ChatActivity : AppCompatActivity() {
             }
 
 
-        //recyclerView.adapter = MessageAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -89,62 +88,45 @@ class ChatActivity : AppCompatActivity() {
                         friendAvatar.setImageResource(helper.getAvatarId(data?.get("avatar")?.toString()))
 
                     } else {
-                        Log.d("chatname", "No such document")
+                        Log.d(TAG, "No such document")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d("chatname", "get failed with ", exception)
+                    Log.d(TAG, "get failed with ", exception)
                 }
         }
+
+        // create listener for sending button (i tried to put this in a helper function but theres weird jank timing stuff going on, because userData was somehow null
 
         // Send message
         // if friendId == null, we are in global chat
-        if (friendId == null){
-            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
-            sendButton.setOnClickListener {
-                val emailEditText:  TextInputEditText = findViewById(R.id.chat_MessageBar_TextInputEditText)
-                val messageSend = emailEditText.getText().toString()
-                if (messageSend != ""){
-                    val messageData = hashMapOf(
-                        "displayName" to userData["name"],
-                        "photoURL" to userData["avatar"],
-                        "read" to false,    // unneeded but web does it, soooo
-                        "senderId" to uid,
-                        "text" to messageSend,
-                        "timestamp" to Timestamp.now(),
-                    )
-                    db.collection("messages").document().set(messageData)
-                }
-                emailEditText.setText("")
-                recyclerView.scrollToPosition(chatList.size - 1)
-            }
-        }
-        else{
-            // send message in private message with friend
+        var messagesPath = "messages"
+
+        // if not null, its a private message with a friend, which has a different id and path
+        if (friendId != null){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
             val chatId = chatIdArray.joinToString("_")
-            val messagesPath = "chats/$chatId/messages"
+            messagesPath = "chats/$chatId/messages"
+        }
 
-            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
-            sendButton.setOnClickListener {
-                val emailEditText: TextInputEditText =
-                    findViewById(R.id.chat_MessageBar_TextInputEditText)
-                val messageSend = emailEditText.getText().toString()
-                if (messageSend != "") {
-                    val messageData = hashMapOf(
-                        "displayName" to userData["name"],
-                        "photoURL" to userData["avatar"],
-                        "read" to false,
-                        "senderId" to uid,
-                        "text" to messageSend,
-                        "timestamp" to Timestamp.now(),
-                    )
-                    db.collection(messagesPath).document().set(messageData)
-                }
-                emailEditText.setText("")
-                recyclerView.scrollToPosition(chatList.size - 1)
+        val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
+        sendButton.setOnClickListener {
+            val emailEditText: TextInputEditText = findViewById(R.id.chat_MessageBar_TextInputEditText)
+            val messageSend = emailEditText.getText().toString()
+            if (messageSend != "") {
+                val messageData = hashMapOf(
+                    "displayName" to userData["name"],
+                    "photoURL" to userData["avatar"],
+                    "read" to false,
+                    "senderId" to uid,
+                    "text" to messageSend,
+                    "timestamp" to Timestamp.now()
+                )
+                db.collection(messagesPath).document().set(messageData)
             }
+            emailEditText.setText("")
+            recyclerView.scrollToPosition(chatList.size - 1)
         }
 
         // Prevent dark mode
@@ -180,6 +162,10 @@ class ChatActivity : AppCompatActivity() {
                 insets
             }
         }
+    }
+
+    fun createSendMessageButtonListener(friendId:String?, userData:Map<String, Any>, recyclerView:RecyclerView){
+
     }
 
     /**
