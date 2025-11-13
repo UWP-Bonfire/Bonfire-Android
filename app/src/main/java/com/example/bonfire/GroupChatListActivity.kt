@@ -99,7 +99,7 @@ class GroupChatListActivity : AppCompatActivity() {
                         ContextCompat.startActivity(this, intent, null)
                     }
 
-                     displayUnreadBubble(friendView, friendId)
+                     displayUnreadBubble(friendView, friendId, friendData)
 
                     groupChatList.addView(friendView)
                 } else {
@@ -112,7 +112,7 @@ class GroupChatListActivity : AppCompatActivity() {
         }
     }
 
-    fun displayUnreadBubble(friendView: View, friendId:String){
+    fun displayUnreadBubble(friendView: View, friendId:String, friendData:Map<String, Any>){
         // Keep or remove unread bubble based on if last message in chat is unread (and isn't from you)
         // filter for first message of dm
         db.collection(getChatIdWithFriend(friendId))
@@ -122,13 +122,11 @@ class GroupChatListActivity : AppCompatActivity() {
         .addOnSuccessListener { chatDocs ->
             for (chatDoc in chatDocs){
                 if (chatDoc != null) {
-                    Log.d(TAG, "read:${chatDoc.data["read"]}. newest message found in chat with $friendId, '${chatDoc.data["text"]}'" )
-
-                    // If it's an old message without the "read" field, it will be assumed to be read
-                    // If read, remove unread bubble
-                    // If you sent the last message, you've obviously read all the recent messages
-                    if ((chatDoc.data["read"] == null || chatDoc.data["read"] == true)
-                        && chatDoc.data["senderId"] != uid) {
+                    val chatData = chatDoc.data
+                    Log.d(TAG, "read:${chatData["read"]}. newest message found in chat with ${friendData["name"]}, '${chatDoc.data["text"]}'" )
+                    if (   chatData["read"] == null         // If it's an old message without the "read" field, it will be assumed to be read
+                        || chatData["read"] == true         // If read, remove unread bubble
+                        || chatData["senderId"] == uid) {   // If you sent the last message, you've obviously read all the recent messages
                         val globalUnread : ImageView = friendView.findViewById(R.id.text_chat_unread_bubble)
                         (globalUnread.parent as ViewManager).removeView(globalUnread)
                     }
