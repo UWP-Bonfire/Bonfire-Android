@@ -29,17 +29,11 @@ class AccountActivity : AppCompatActivity() {
     val helper = Helper()
     private val channelId = "i.apps.notifications" // Unique channel ID for notifications
     private val description = "Test notification"  // Description for the notification channel
-    private val notificationId = 1234 // Unique identifier for the notification
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.account_layout)
 
-        /**
-         * Create a notification channel for devices running Android 8.0 or higher.
-         * A channel groups notifications with similar behavior.
-         */
         val notificationChannel = NotificationChannel(
             channelId,
             description,
@@ -84,7 +78,6 @@ class AccountActivity : AppCompatActivity() {
             Log.d(TAG, "get failed with ", exception)
         }
 
-        // TODO: add button listeners or whatever to account_grid
         val avatarGrid: GridLayout = findViewById(R.id.account_grid)
         for (i in 0..<avatarGrid.size) {
             val child: ShapeableImageView = (avatarGrid as ViewGroup).getChildAt(i) as ShapeableImageView
@@ -98,7 +91,6 @@ class AccountActivity : AppCompatActivity() {
                     .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
                 // visually change icon
                 val accountAvatarImageView: ShapeableImageView = findViewById(R.id.account_avatar)
-                val helper = Helper()
                 accountAvatarImageView.setImageResource(helper.getAvatarId(avatar))
             }
         }
@@ -125,6 +117,7 @@ class AccountActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
             }
+            val helper = Helper()
             helper.sendNotification("Frogger25", "test!", this) // Trigger the notification
         }
     }

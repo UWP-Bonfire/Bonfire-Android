@@ -40,6 +40,16 @@
             <include
                 android:id="@+id/global_chat"
                 layout="@layout/groupchat_layout"/>
+
+            <TextView
+                android:id="@+id/groupchat_list_loading"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:text="Loading..."
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
         </LinearLayout>
     </ScrollView>
 
