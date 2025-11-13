@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewManager
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -16,6 +17,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 
 
@@ -68,7 +70,7 @@ class GroupChatListActivity : AppCompatActivity() {
     // Generate list of friends, with a button that will open the specific private message message with them
     private fun populateFriendList(db: FirebaseFirestore, userFriends:List<String>) {
         for (friendId in userFriends) {
-            Log.d("chat list", "friendId $friendId")
+            Log.d(TAG, "friendId $friendId")
 
             // Find data of friend
             val docRef = db.collection("users").document(friendId)
@@ -97,24 +99,49 @@ class GroupChatListActivity : AppCompatActivity() {
                         ContextCompat.startActivity(this, intent, null)
                     }
 
-                    // Keep or remove unread bubble based on if last message in chat is unread (and isn't from you)
-                    if () {
-
-                    } else{
-                        // get rid of unread bubble on global chat
-                        val globalUnread : ImageView = findViewById(R.id.text_chat_unread_bubble)
-                        (globalUnread.parent as ViewManager).removeView(globalUnread)
-                    }
+                     displayUnreadBubble(friendView, friendId)
 
                     groupChatList.addView(friendView)
                 } else {
-                    Log.d("chat list", "No such document")
+                    Log.d(TAG, "No such document")
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("chat list", "get failed with ", exception)
+                Log.d(TAG, "get failed with ", exception)
             }
         }
+    }
+
+    fun displayUnreadBubble(friendView: View, friendId:String){
+        // Keep or remove unread bubble based on if last message in chat is unread (and isn't from you)
+        // filter for first message of dm
+        db.collection(getChatIdWithFriend(friendId))
+        .orderBy("timestamp", Query.Direction.DESCENDING)
+        .limit(1)
+        .get()
+        .addOnSuccessListener { chatDocs ->
+            for (chatDoc in chatDocs){
+                if (chatDoc != null) {
+                    Log.d(TAG, "read:${chatDoc.data["read"]}. newest message found in chat with $friendId, '${chatDoc.data["text"]}'" )
+
+                    // If it's an old message without the "read" field, it will be assumed to be read
+                    // If read, remove unread bubble
+                    // If you sent the last message, you've obviously read all the recent messages
+                    if ((chatDoc.data["read"] == null || chatDoc.data["read"] == true)
+                        && chatDoc.data["senderId"] != uid) {
+                        val globalUnread : ImageView = friendView.findViewById(R.id.text_chat_unread_bubble)
+                        (globalUnread.parent as ViewManager).removeView(globalUnread)
+                    }
+                }
+            }
+        }
+    }
+
+    fun getChatIdWithFriend(friendId:String) : String{
+        val chatIdArray = arrayOf(uid, friendId)
+        chatIdArray.sort()
+        val chatId = chatIdArray.joinToString("_")
+        return "chats/$chatId/messages"
     }
 
     private fun defineBottomNavButtons() {
