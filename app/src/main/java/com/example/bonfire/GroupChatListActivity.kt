@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewManager
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +30,10 @@ class GroupChatListActivity : AppCompatActivity() {
         setContentView(R.layout.groupchat_list_layout)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        // get rid of unread bubble on global chat
+        val globalUnread : ImageView = findViewById(R.id.text_chat_unread_bubble)
+        (globalUnread.parent as ViewManager).removeView(globalUnread)
 
         var userData : Map<String, Object>
         val userRef = db.collection("users").document(uid?: "")
@@ -89,6 +95,15 @@ class GroupChatListActivity : AppCompatActivity() {
                         // Passes friendID to chat activity
                         intent.putExtra("id", friendId)
                         ContextCompat.startActivity(this, intent, null)
+                    }
+
+                    // Keep or remove unread bubble based on if last message in chat is unread (and isn't from you)
+                    if () {
+
+                    } else{
+                        // get rid of unread bubble on global chat
+                        val globalUnread : ImageView = findViewById(R.id.text_chat_unread_bubble)
+                        (globalUnread.parent as ViewManager).removeView(globalUnread)
                     }
 
                     groupChatList.addView(friendView)
