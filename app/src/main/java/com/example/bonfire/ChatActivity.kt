@@ -72,7 +72,7 @@ class ChatActivity : AppCompatActivity() {
 
 
         // Set chat name (name of person you're talking to)
-        if (isPrivateMessage(friendId)){
+        if (isPrivateChat(friendId)){
             // get name of friend
             val docRef = db.collection("users").document(friendId.toString())
             docRef.get()
@@ -101,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
         // if friendId == null, we are in global chat
         var messagesPath = "messages"
 
-        if (isPrivateMessage(friendId)){
+        if (isPrivateChat(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
             val chatId = chatIdArray.joinToString("_")
@@ -175,7 +175,7 @@ class ChatActivity : AppCompatActivity() {
         var chatId = ""
         var messagesPath = "messages"
 
-        if (isPrivateMessage(friendId)){
+        if (isPrivateChat(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
 
@@ -213,13 +213,13 @@ class ChatActivity : AppCompatActivity() {
             }
 
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-            recyclerView.adapter = MessageAdapter(chatList)
+            recyclerView.adapter = MessageAdapter(chatList, isPrivateChat(friendId))
             // scroll to bottom
             recyclerView.scrollToPosition(chatList.size - 1)
         }
     }
 
-    fun isPrivateMessage(friendId:String?) : Boolean{
+    fun isPrivateChat(friendId:String?) : Boolean{
         return friendId != null
     }
 }

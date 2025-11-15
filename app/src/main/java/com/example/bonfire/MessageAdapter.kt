@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 // RecyclerView adapter for the scrollable messages view
-class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
+class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPrivateChat: Boolean) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
     val helper = Helper()
 
     // Akin to onCreate method to initialize each instance (each message)
@@ -21,6 +22,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
         val photoURLTextView: ImageView = view.findViewById(R.id.message_profile)
         val textTextView: TextView = view.findViewById(R.id.message_text)
         val timestampTextView: TextView = view.findViewById(R.id.message_timestamp)
+        val checkReadImageView: ImageView = view.findViewById(R.id.check_read)
     }
 
     // Define each entry's layout/look
@@ -37,6 +39,15 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
         holder.photoURLTextView.setImageResource(helper.getAvatarId(message["photoURL"] as String?))
+
+        // Only display read marks in DMs
+        // if most recent show check mark (sent) or double check mark (read)
+        if(inPrivateChat && position == itemCount - 1){
+            val messageRead = message["read"] as Boolean
+            val checkReadImageViewId = if (messageRead) R.drawable.double_check else R.drawable.check
+            holder.checkReadImageView.setImageResource(checkReadImageViewId)
+            holder.checkReadImageView.visibility = View.VISIBLE
+        }
     }
 
     fun formatTimestampToString(timestamp: Timestamp): String{
