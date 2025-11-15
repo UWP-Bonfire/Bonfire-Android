@@ -213,7 +213,7 @@ class ChatActivity : AppCompatActivity() {
             }
 
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-            recyclerView.adapter = MessageAdapter(chatList, isPrivateChat(friendId))
+            recyclerView.adapter = MessageAdapter(chatList, isPrivateChat(friendId), uid.toString())
             // scroll to bottom
             recyclerView.scrollToPosition(chatList.size - 1)
         }

@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 // RecyclerView adapter for the scrollable messages view
-class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPrivateChat: Boolean) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
+class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPrivateChat: Boolean, val uid:String) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
     val helper = Helper()
 
     // Akin to onCreate method to initialize each instance (each message)
@@ -42,7 +42,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
 
         // Only display read marks in DMs
         // if most recent show check mark (sent) or double check mark (read)
-        if(inPrivateChat && position == itemCount - 1){
+        if(inPrivateChat && position == itemCount - 1 && (message["senderId"] == uid)){
             val messageRead = message["read"] as Boolean
             val checkReadImageViewId = if (messageRead) R.drawable.double_check else R.drawable.check
             holder.checkReadImageView.setImageResource(checkReadImageViewId)
