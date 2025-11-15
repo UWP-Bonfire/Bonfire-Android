@@ -41,7 +41,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>) : RecyclerV
 
     fun formatTimestampToString(timestamp: Timestamp): String{
         val timestampDate:Date = timestamp.toDate()
-        val dateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm")
+        val dateFormat = SimpleDateFormat("hh:mm a")
         return dateFormat.format(timestampDate)
     }
 
