@@ -9,6 +9,16 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_drawable">
 
+    <Button
+        android:id="@+id/button_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ShapeAppearanceOverlay.Material3.Button"
+        android:text="send notif"
+        app:layout_constraintBottom_toTopOf="@id/account_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.cardview.widget.CardView
         style="@style/CardStyle"
