@@ -39,7 +39,7 @@
 
             <include
                 android:id="@+id/global_chat"
-                layout="@layout/groupchat_layout"/>
+                layout="@layout/globalchat_layout"/>
 
             <TextView
                 android:id="@+id/groupchat_list_loading"

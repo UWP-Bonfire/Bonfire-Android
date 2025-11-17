@@ -47,9 +47,6 @@ class AccountActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
 
-
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val user = FirebaseAuth.getInstance().currentUser
         val accountUserText: TextView = findViewById(R.id.account_user)
         val accountEmailText: TextView = findViewById(R.id.account_email)

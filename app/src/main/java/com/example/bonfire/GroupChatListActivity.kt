@@ -31,12 +31,6 @@ class GroupChatListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.groupchat_list_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-        // get rid of unread bubble on global chat
-        val globalUnread : ImageView = findViewById(R.id.text_chat_unread_bubble)
-        (globalUnread.parent as ViewManager).removeView(globalUnread)
-
         var userData : Map<String, Object>
         val userRef = db.collection("users").document(uid?: "")
         userRef.get()

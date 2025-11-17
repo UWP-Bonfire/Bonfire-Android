@@ -33,7 +33,8 @@
                 android:contentDescription="User Icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:srcCompat="@drawable/chat_processing"/>
+                app:srcCompat="@drawable/chat_processing"
+                style="@style/icon"/>
 
 
             <!--User name-->
@@ -69,14 +70,5 @@
                 android:layout_margin="2dp"
                 style="@style/imagebutton" />
         </LinearLayout>
-
-        <!--Unread bubble-->
-        <ImageView
-            android:id="@+id/text_chat_unread_bubble"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/unread_bubble"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"/>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

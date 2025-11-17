@@ -32,8 +32,6 @@ class FriendAddActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.friend_add_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val friendAddButton : Button = findViewById(R.id.friend_add_search_button)
         friendAddButton.setOnClickListener {
             val friendEditText: TextInputEditText = findViewById(R.id.friend_add_edit)
