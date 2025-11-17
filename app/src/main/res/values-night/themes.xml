@@ -4,4 +4,24 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    <style name="CardStyle" parent="CardView">
+        <item name="cardBackgroundColor">@color/dark_brown</item>
+    </style>
+    <style name="CardTextStyle" parent="Theme.Bonfire">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="icon" parent="Theme.Bonfire">
+        <item name="android:tint">@color/white</item>
+    </style>
+    <style name="imagebutton" parent="Theme.Bonfire">
+        <item name="android:tint">@color/white</item>
+        <item name="android:background">@color/semi_dark_brown</item>
+    </style>
+
+
+    <style name="LinearLayoutBackgroundStyle" parent="Theme.Bonfire">
+        <item name="android:background">@drawable/gradient_drawable</item>
+    </style>
 </resources>

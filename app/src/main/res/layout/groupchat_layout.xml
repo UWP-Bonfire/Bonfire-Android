@@ -32,7 +32,8 @@
                 android:contentDescription="User Icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:srcCompat="@drawable/chat_processing" />
+                app:srcCompat="@drawable/chat_processing"
+                style="@style/icon"/>
 
 
             <!--User name-->
@@ -44,9 +45,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Global chat"
-                android:textColor="@color/black"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                style="@style/CardTextStyle" />
 
 
             <ImageButton
@@ -55,7 +56,8 @@
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/chat_bubble"
                 android:layout_gravity="center_vertical"
-                />
+                android:layout_margin="2dp"
+                style="@style/imagebutton"/>
 
 
             <ImageButton
@@ -63,7 +65,9 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/dots_vertical"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_margin="2dp"
+                style="@style/imagebutton" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,8 +27,6 @@ class GroupChatListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.groupchat_list_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         var userData : Map<String, Object>
         val userRef = db.collection("users").document(uid?: "")
         userRef.get()

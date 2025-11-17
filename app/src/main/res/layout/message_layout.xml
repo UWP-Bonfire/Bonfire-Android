@@ -43,7 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="User"
-        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/message_profile"
@@ -76,7 +75,6 @@
                 android:paddingTop="8dp"
                 android:paddingRight="12dp"
                 android:text="Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distractin"
-                android:textColor="@color/black"
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -87,7 +85,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2025-10-04 06:26"
-        android:textColor="@color/dark_gray"
         android:textSize="12sp"
         android:paddingStart="12dp"
         app:layout_constraintBottom_toBottomOf="@id/message_user"

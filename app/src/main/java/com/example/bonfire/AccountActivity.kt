@@ -24,8 +24,6 @@ class AccountActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.account_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val user = FirebaseAuth.getInstance().currentUser
         val accountUserText: TextView = findViewById(R.id.account_user)
         val accountEmailText: TextView = findViewById(R.id.account_email)

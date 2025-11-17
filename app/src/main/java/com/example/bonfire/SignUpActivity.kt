@@ -26,8 +26,6 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val db = Firebase.firestore
         auth = Firebase.auth
         TAG = "signup"

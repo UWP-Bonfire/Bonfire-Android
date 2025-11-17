@@ -22,8 +22,6 @@ class SignInActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val signInButton: Button = findViewById(R.id.signin_button)
         signInButton.setOnClickListener {
             // get contents of email/user and password inputs

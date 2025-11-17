@@ -146,9 +146,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-        // Prevent dark mode
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         // Button to switch to main screen activity
         val loginButton: ImageButton = findViewById(R.id.chat_cardView_backArrow)
         loginButton.setOnClickListener {

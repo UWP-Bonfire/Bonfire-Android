@@ -15,7 +15,9 @@
             android:layout_height="60dp"
             android:contentDescription="Chat"
             app:srcCompat="@drawable/chat_bubble"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            style="@style/imagebutton"
+/>
 
         <ImageButton
             android:id="@+id/menu_button_friends"
@@ -25,7 +27,8 @@
             android:layout_height="60dp"
             android:contentDescription="Friends"
             app:srcCompat="@drawable/account_plus"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            style="@style/imagebutton"/>
 
         <ImageButton
             android:id="@+id/menu_button_account"
@@ -35,7 +38,8 @@
             android:layout_height="60dp"
             android:contentDescription="User"
             app:srcCompat="@drawable/account"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            style="@style/imagebutton"/>
 
         <ImageButton
             android:id="@+id/menu_button_logout"
@@ -45,6 +49,7 @@
             android:layout_weight="1"
             android:contentDescription="User"
             app:srcCompat="@drawable/logout"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            style="@style/imagebutton"/>
 
 </LinearLayout>
