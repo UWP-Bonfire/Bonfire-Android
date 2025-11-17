@@ -11,7 +11,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.Firebase
@@ -137,11 +136,12 @@ class GroupChatListActivity : AppCompatActivity() {
                 if (chatDoc != null) {
                     val chatData = chatDoc.data
                     Log.d(TAG, "read:${chatData["read"]}. newest message found in chat with ${friendData["name"]}, '${chatDoc.data["text"]}'" )
-                    if (   chatData["read"] == null         // If it's an old message without the "read" field, it will be assumed to be read
-                        || chatData["read"] == true         // If read, remove unread bubble
-                        || chatData["senderId"] == uid) {   // If you sent the last message, you've obviously read all the recent messages
+                    // If it's an old message without the "read" field, it will be assumed to be read
+                    if (chatData["read"] == false       // If not read
+                    && chatData["senderId"] != uid) {   // If you sent the last message, you've obviously read all the recent messages
+                        // then display the unread bubble
                         val globalUnread : ImageView = friendView.findViewById(R.id.text_chat_unread_bubble)
-                        (globalUnread.parent as ViewManager).removeView(globalUnread)
+                        globalUnread.visibility = View.VISIBLE
                     }
                 }
             }
