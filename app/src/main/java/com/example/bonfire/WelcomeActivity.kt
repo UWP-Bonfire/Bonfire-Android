@@ -13,8 +13,6 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_layout)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         // Button to switch to sign in activity
         val signInButton: Button = findViewById(R.id.welcome_signin_button)
         signInButton.setOnClickListener {

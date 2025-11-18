@@ -27,7 +27,7 @@ class ChatActivity : AppCompatActivity() {
     val uid = FirebaseAuth.getInstance().currentUser?.uid
     val db = Firebase.firestore
     val helper = Helper()
-    private lateinit var chatList: ArrayList<Map<String, Any>?>
+    private var chatList: ArrayList<Map<String, Any>?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,16 +67,14 @@ class ChatActivity : AppCompatActivity() {
             }
 
 
-        //recyclerView.adapter = MessageAdapter()
         val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
         // Set chat name (name of person you're talking to)
-        // if friendId == null, its the global chat
-        if (friendId != null){
+        if (isPrivateChat(friendId)){
             // get name of friend
-            val docRef = db.collection("users").document(friendId)
+            val docRef = db.collection("users").document(friendId.toString())
             docRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -89,65 +87,45 @@ class ChatActivity : AppCompatActivity() {
                         friendAvatar.setImageResource(helper.getAvatarId(data?.get("avatar")?.toString()))
 
                     } else {
-                        Log.d("chatname", "No such document")
+                        Log.d(TAG, "No such document")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d("chatname", "get failed with ", exception)
+                    Log.d(TAG, "get failed with ", exception)
                 }
         }
+
+        // create listener for sending button (i tried to put this in a helper function but theres weird jank timing stuff going on, because userData was somehow null
 
         // Send message
         // if friendId == null, we are in global chat
-        if (friendId == null){
-            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
-            sendButton.setOnClickListener {
-                val emailEditText:  TextInputEditText = findViewById(R.id.chat_MessageBar_TextInputEditText)
-                val messageSend = emailEditText.getText().toString()
-                if (messageSend != ""){
-                    val messageData = hashMapOf(
-                        "displayName" to userData["name"],
-                        "photoURL" to userData["avatar"],
-                        "read" to false,
-                        "senderId" to uid,
-                        "text" to messageSend,
-                        "timestamp" to Timestamp.now(),
-                    )
-                    db.collection("messages").document().set(messageData)
-                }
-                emailEditText.setText("")
-                recyclerView.scrollToPosition(chatList.size - 1)
-            }
-        }
-        else{
-            // send message in private message with friend
+        var messagesPath = "messages"
+
+        if (isPrivateChat(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
             val chatId = chatIdArray.joinToString("_")
-            val messagesPath = "chats/$chatId/messages"
-
-            val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
-            sendButton.setOnClickListener {
-                val emailEditText: TextInputEditText =
-                    findViewById(R.id.chat_MessageBar_TextInputEditText)
-                val messageSend = emailEditText.getText().toString()
-                if (messageSend != "") {
-                    val messageData = hashMapOf(
-                        "displayName" to userData["name"],
-                        "photoURL" to userData["avatar"],
-                        "senderId" to uid,
-                        "text" to messageSend,
-                        "timestamp" to Timestamp.now(),
-                    )
-                    db.collection(messagesPath).document().set(messageData)
-                }
-                emailEditText.setText("")
-                recyclerView.scrollToPosition(chatList.size - 1)
-            }
+            messagesPath = "chats/$chatId/messages"
         }
 
-        // Prevent dark mode
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val sendButton: ImageView = findViewById(R.id.chat_MessageBar_SendButton)
+        sendButton.setOnClickListener {
+            val emailEditText: TextInputEditText = findViewById(R.id.chat_MessageBar_TextInputEditText)
+            val messageSend = emailEditText.getText().toString()
+            if (messageSend != "") {
+                val messageData = hashMapOf(
+                    "displayName" to userData["name"],
+                    "photoURL" to userData["avatar"],
+                    "read" to false,
+                    "senderId" to uid,
+                    "text" to messageSend,
+                    "timestamp" to Timestamp.now()
+                )
+                db.collection(messagesPath).document().set(messageData)
+            }
+            emailEditText.setText("")
+            recyclerView.scrollToPosition(chatList.size - 1)
+        }
 
         // Button to switch to main screen activity
         val loginButton: ImageButton = findViewById(R.id.chat_cardView_backArrow)
@@ -194,8 +172,7 @@ class ChatActivity : AppCompatActivity() {
         var chatId = ""
         var messagesPath = "messages"
 
-        // Exception: if friendId == null, its the global chat
-            if (friendId != null){
+        if (isPrivateChat(friendId)){
             val chatIdArray = arrayOf(uid, friendId)
             chatIdArray.sort()
 
@@ -218,6 +195,13 @@ class ChatActivity : AppCompatActivity() {
 
             if (snapshot != null && !snapshot.isEmpty) {
                 for (document in snapshot.documents) {
+                    // if someone else sent the message, mark it read
+                    if (document.data?.get("senderId") != uid){
+                        document.reference.update( mapOf(
+                            "read" to true
+                        ))
+                    }
+
                     //Log.d(TAG, "data: ${document.data}")
                     chatList.add(document.data)
                 }
@@ -226,9 +210,13 @@ class ChatActivity : AppCompatActivity() {
             }
 
             val recyclerView: RecyclerView = findViewById(R.id.chat_messages_RecyclerView)
-            recyclerView.adapter = MessageAdapter(chatList)
+            recyclerView.adapter = MessageAdapter(chatList, isPrivateChat(friendId), uid.toString())
             // scroll to bottom
             recyclerView.scrollToPosition(chatList.size - 1)
         }
+    }
+
+    fun isPrivateChat(friendId:String?) : Boolean{
+        return friendId != null
     }
 }

@@ -45,7 +45,7 @@
                 app:shapeAppearanceOverlay="@style/Circular"
                 app:srcCompat="@drawable/chat_bubble"
                 android:scaleType="fitCenter"
-                android:layout_gravity="bottom"/>
+                android:layout_gravity="bottom" />
 
             <TextView
                 android:id="@+id/chat_cardView_UserName"

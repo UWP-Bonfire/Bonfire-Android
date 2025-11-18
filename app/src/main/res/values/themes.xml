@@ -15,8 +15,24 @@
     <style name="ButtonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/inter</item>
     </style>
-    <style name="CardStyle" parent="CardView">
+    <style name="CardStyle" parent="Theme.Bonfire">
         <item name="cardBackgroundColor">@color/very_light_brown</item>
+    </style>
+
+    <style name="CardTextStyle" parent="Theme.Bonfire">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="icon" parent="Theme.Bonfire">
+        <item name="android:tint">@color/black</item>
+    </style>
+    <style name="imagebutton" parent="Theme.Bonfire">
+        <item name="android:tint">@color/black</item>
+        <item name="android:background">@color/very_light_gray</item>
+    </style>
+
+    <style name="LinearLayoutBackgroundStyle" parent="Theme.Bonfire">
+        <item name="android:background">@drawable/gradient_drawable</item>
     </style>
 
     <!--Cut images into shapes-->

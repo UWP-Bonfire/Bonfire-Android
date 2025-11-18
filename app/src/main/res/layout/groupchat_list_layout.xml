@@ -25,7 +25,7 @@
     </androidx.cardview.widget.CardView>
 
     <ScrollView
-        android:id="@+id/list_messages_ScrollView"
+        android:id="@+id/friend_request_scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -39,7 +39,17 @@
 
             <include
                 android:id="@+id/global_chat"
-                layout="@layout/groupchat_layout"/>
+                layout="@layout/globalchat_layout"/>
+
+            <TextView
+                android:id="@+id/groupchat_list_loading"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:text="Loading..."
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
         </LinearLayout>
     </ScrollView>
 

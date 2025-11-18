@@ -9,8 +9,19 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_drawable">
 
+    <Button
+        android:id="@+id/button_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ShapeAppearanceOverlay.Material3.Button"
+        android:text="send notif"
+        app:layout_constraintBottom_toTopOf="@id/account_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.cardview.widget.CardView
+        style="@style/CardStyle"
         android:id="@+id/account_card"
         android:layout_width="match_parent"
         android:layout_height="500dp"
@@ -25,7 +36,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +82,7 @@
             
                 <GridLayout
                     android:id="@+id/account_grid"
+                    android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -83,10 +95,11 @@
                     <!-- Row 1 -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon1"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/icon1"
                         android:clickable="true"
                         android:focusable="true"
@@ -94,8 +107,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon2"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon2"
@@ -105,8 +118,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon3"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon3"
@@ -116,8 +129,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon4"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon4"
@@ -127,8 +140,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon5"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon5"
@@ -139,8 +152,8 @@
                     <!-- Row 2 -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon6"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon6"
@@ -150,8 +163,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon7"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon7"
@@ -161,8 +174,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon8"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon8"
@@ -172,8 +185,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon9"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon9"
@@ -183,8 +196,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon10"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon10"
@@ -195,8 +208,8 @@
                     <!-- Row 3 -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon11"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon11"
@@ -206,8 +219,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon12"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon12"
@@ -217,8 +230,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon13"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon13"
@@ -228,8 +241,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon14"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon14"
@@ -239,8 +252,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/icon15"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="15dp"
+                        android:layout_height="45dp"
                         android:layout_columnWeight="1"
                         android:layout_rowWeight="1"
                         android:src="@drawable/icon15"
