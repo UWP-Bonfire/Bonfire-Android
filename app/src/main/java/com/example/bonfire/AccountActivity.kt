@@ -3,6 +3,7 @@ package com.example.bonfire
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -22,6 +23,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import androidx.core.view.size
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.DocumentChange
 
 
 class AccountActivity : AppCompatActivity() {
@@ -92,11 +95,38 @@ class AccountActivity : AppCompatActivity() {
             }
         }
 
-        sendNotif()
+        listenForNotifs()
         defineBottomNavButtons()
     }
 
-    private fun sendNotif() {
+    fun listenForNotifs(){
+        // add listener for each DM with a friend, listening for any messages sent
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val userChatIDs = helper.getListOfUserChatIDs(uid)
+        Log.d(TAG, "uhhh $userChatIDs")
+
+
+        for (friend in userChatIDs){
+            Log.d(TAG, "adding listener to chat with ${friend["name"]}, groupchatId:${friend["documentPath"]}")
+            Firebase.firestore.collection(friend["documentPath"] ?: "")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    return@addSnapshotListener
+                }
+                for (dc in snapshots!!.documentChanges) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        sendNotif(friend["name"].toString(),
+                            dc.document.data["text"].toString(),
+                            this
+                        )
+                         Log.d(TAG, "New added: ${dc.document.data}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun sendNotif(title:String, text:String, context: Context) {
         val notifButton: Button = findViewById(R.id.button_test)
         notifButton.setOnClickListener {
             // Request runtime permission for notifications on Android 13 and higher
@@ -115,7 +145,7 @@ class AccountActivity : AppCompatActivity() {
                 }
             }
             val helper = Helper()
-            helper.sendNotification("Frogger25", "test!", this) // Trigger the notification
+            helper.sendNotification(title, text, context) // Trigger the notification
         }
     }
 
