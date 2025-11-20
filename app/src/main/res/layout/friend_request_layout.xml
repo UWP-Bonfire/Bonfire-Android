@@ -41,7 +41,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Loading..."
-                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -54,6 +53,7 @@
                 android:layout_gravity="center_vertical"
                 android:background="#83884e"
                 android:layout_margin="2dp"
+                style="@style/imagebutton"
                 />
 
 
@@ -64,7 +64,8 @@
                 app:srcCompat="@drawable/close_thick"
                 android:layout_gravity="center_vertical"
                 android:background="#c84848"
-                android:layout_margin="2dp"/>
+                android:layout_margin="2dp"
+                style="@style/imagebutton"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
