@@ -84,7 +84,7 @@ class AccountActivity : AppCompatActivity() {
             child.setOnClickListener {
                 // Update the "avatar" field of the user 
                 val userRef = db.collection("users").document(user?.uid ?: "")
-                val avatar = "/bonfire-backend/src/assets/icons/${(i + 1)}.png"
+                val avatar = "/bonfire-backend/src/assets/icons/icon${(i + 1)}.png"
                 userRef
                     .update("avatar", avatar)
                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
