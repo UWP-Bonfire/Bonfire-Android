@@ -53,60 +53,60 @@ class Helper: AppCompatActivity() {
 
     // Return list of dictionaries, each containing:
     //      friends ID, name, avatar, and documentPath of private chat with user
-    fun getListOfUserChatIDs(uid:String) : MutableList<Map<String, String>>{
-        val listOfFriends : MutableList<Map<String, String>> = mutableListOf()
-        val db = Firebase.firestore
-
-        // get list of user's friends
-        val userRef = db.collection("users").document(uid)
-        userRef.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                val userData = document.data as MutableMap<String, Object>
-                val userFriends = userData["friends"] as List<String>
-                Log.d(TAG, "friends found ${userData["friends"]}")
-                for (friend in userFriends){
-                    // get data of friend
-                    var friendData : Map<String, Any>
-                    val docRef = db.collection("users").document(friend)
-                    docRef.get()
-                    .addOnSuccessListener { friendDoc ->
-                        if (friendDoc != null) {
-                            val friendDictionary : MutableMap<String, String> = mutableMapOf()
-                            friendData = friendDoc.data!!
-                            //Log.d(TAG, "data of friend: ${friendData["name"]} found")
-
-                            // make dictionary of friends ID, avatar, and documentPath of private chat with user
-                            val chatIdArray = arrayOf(uid, friend)
-                            chatIdArray.sort()
-                            val chatId = chatIdArray.joinToString("_")
-
-                            friendDictionary["documentPath"] = "chats/$chatId/messages"
-                            friendDictionary["name"] = friendData["name"].toString()
-                            friendDictionary["friendId"] = friend
-                            friendDictionary["friendAvatar"] = friendData["avatar"].toString()
-                            listOfFriends.add(friendDictionary)
-                            //Log.d(TAG, "created dictionary of friend data: $friendDictionary")
-                        } else {
-                            Log.d(TAG, "No such document")
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.d(TAG, "get failed with ", exception)
-                    }
-
-                }
-                return listOfFriends
-
-            } else {
-                Log.d(TAG, "No such document")
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
-        }
-        return mutableListOf()
-    }
+//    fun getListOfUserChatIDs(uid:String) : MutableList<Map<String, String>>{
+//        val listOfFriends : MutableList<Map<String, String>> = mutableListOf()
+//        val db = Firebase.firestore
+//
+//        // get list of user's friends
+//        val userRef = db.collection("users").document(uid)
+//        userRef.get()
+//        .addOnSuccessListener { document ->
+//            if (document != null) {
+//                val userData = document.data as MutableMap<String, Object>
+//                val userFriends = userData["friends"] as List<String>
+//                Log.d(TAG, "friends found ${userData["friends"]}")
+//                for (friend in userFriends){
+//                    // get data of friend
+//                    var friendData : Map<String, Any>
+//                    val docRef = db.collection("users").document(friend)
+//                    docRef.get()
+//                    .addOnSuccessListener { friendDoc ->
+//                        if (friendDoc != null) {
+//                            val friendDictionary : MutableMap<String, String> = mutableMapOf()
+//                            friendData = friendDoc.data!!
+//                            //Log.d(TAG, "data of friend: ${friendData["name"]} found")
+//
+//                            // make dictionary of friends ID, avatar, and documentPath of private chat with user
+//                            val chatIdArray = arrayOf(uid, friend)
+//                            chatIdArray.sort()
+//                            val chatId = chatIdArray.joinToString("_")
+//
+//                            friendDictionary["documentPath"] = "chats/$chatId/messages"
+//                            friendDictionary["name"] = friendData["name"].toString()
+//                            friendDictionary["friendId"] = friend
+//                            friendDictionary["friendAvatar"] = friendData["avatar"].toString()
+//                            listOfFriends.add(friendDictionary)
+//                            //Log.d(TAG, "created dictionary of friend data: $friendDictionary")
+//                        } else {
+//                            Log.d(TAG, "No such document")
+//                        }
+//                    }
+//                    .addOnFailureListener { exception ->
+//                        Log.d(TAG, "get failed with ", exception)
+//                    }
+//
+//                }
+//                return listOfFriends
+//
+//            } else {
+//                Log.d(TAG, "No such document")
+//            }
+//        }
+//        .addOnFailureListener { exception ->
+//            Log.d(TAG, "get failed with ", exception)
+//        }
+//        return mutableListOf()
+//    }
 
     /**
      * Build and send a notification with a custom layout and action.

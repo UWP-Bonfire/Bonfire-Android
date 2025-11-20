@@ -95,40 +95,14 @@ class AccountActivity : AppCompatActivity() {
             }
         }
 
-        listenForNotifs()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        getListOfUserChatIDs(uid ?: "")
         defineBottomNavButtons()
-    }
 
-    fun listenForNotifs(){
-        // add listener for each DM with a friend, listening for any messages sent
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-        val userChatIDs = helper.getListOfUserChatIDs(uid)
-        Log.d(TAG, "uhhh $userChatIDs")
-
-
-        for (friend in userChatIDs){
-            Log.d(TAG, "adding listener to chat with ${friend["name"]}, groupchatId:${friend["documentPath"]}")
-            Firebase.firestore.collection(friend["documentPath"] ?: "")
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    return@addSnapshotListener
-                }
-                for (dc in snapshots!!.documentChanges) {
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        sendNotif(friend["name"].toString(),
-                            dc.document.data["text"].toString(),
-                            this
-                        )
-                         Log.d(TAG, "New added: ${dc.document.data}")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun sendNotif(title:String, text:String, context: Context) {
         val notifButton: Button = findViewById(R.id.button_test)
         notifButton.setOnClickListener {
+            Log.d(TAG, "Requesting perms")
+
             // Request runtime permission for notifications on Android 13 and higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (ActivityCompat.checkSelfPermission(
@@ -144,9 +118,98 @@ class AccountActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
             }
+
             val helper = Helper()
-            helper.sendNotification(title, text, context) // Trigger the notification
+            Log.d(TAG, "sending notif through test button")
+            helper.sendNotification("title", "text", this) // Trigger the notification
         }
+    }
+
+    // Return list of dictionaries, each containing:
+    //      friends ID, name, avatar, and documentPath of private chat with user
+    fun getListOfUserChatIDs(uid:String){
+        val listOfFriends : MutableList<Map<String, String>> = mutableListOf()
+        val db = Firebase.firestore
+
+        // get list of user's friends
+        val userRef = db.collection("users").document(uid)
+        userRef.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                val userData = document.data as MutableMap<String, Object>
+                val userFriends = userData["friends"] as List<String>
+                Log.d(TAG, "friends found ${userData["friends"]}")
+                for (friend in userFriends){
+                    // get data of friend
+                    var friendData : Map<String, Any>
+                    val docRef = db.collection("users").document(friend)
+                    docRef.get()
+                    .addOnSuccessListener { friendDoc ->
+                        if (friendDoc != null) {
+                            val friendDictionary : MutableMap<String, String> = mutableMapOf()
+                            friendData = friendDoc.data!!
+                            //Log.d(TAG, "data of friend: ${friendData["name"]} found")
+
+                            // make dictionary of friends ID, avatar, and documentPath of private chat with user
+                            val chatIdArray = arrayOf(uid, friend)
+                            chatIdArray.sort()
+                            val chatId = chatIdArray.joinToString("_")
+
+                            friendDictionary["documentPath"] = "chats/$chatId/messages"
+                            friendDictionary["name"] = friendData["name"].toString()
+                            friendDictionary["friendId"] = friend
+                            friendDictionary["friendAvatar"] = friendData["avatar"].toString()
+                            listOfFriends.add(friendDictionary)
+                            Log.d(TAG, "created dictionary of friend data: $friendDictionary")
+                        } else {
+                            Log.d(TAG, "No such document")
+                        }
+                        Log.d(TAG, "ummm $listOfFriends")
+                        listenForNotifs(listOfFriends)
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d(TAG, "get failed with ", exception)
+                    }
+                }
+            } else {
+                Log.d(TAG, "No such document")
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.d(TAG, "get failed with ", exception)
+        }
+    }
+
+    fun listenForNotifs(list:MutableList<Map<String, String>>){
+        // add listener for each DM with a friend, listening for any messages sent
+        Log.d(TAG, "uhhh $list")
+
+        var i = 0
+        for (friend in list){
+            i += 1
+            Log.d(TAG, "adding listener to chat with ${friend["name"]}, groupchatId:${friend["documentPath"]}")
+            Firebase.firestore.collection(friend["documentPath"] ?: "")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    return@addSnapshotListener
+                }
+                for (dc in snapshots!!.documentChanges) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        sendNotif(friend["name"].toString(),
+                            dc.document.data["text"].toString(),
+                            this
+                        )
+                        Log.d(TAG, "New added (listener $i): ${dc.document.data}")
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    private fun sendNotif(title:String, text:String, context: Context) {
+        val helper = Helper()
+        helper.sendNotification(title, text, context) // Trigger the notification
     }
 
     private fun defineBottomNavButtons() {
