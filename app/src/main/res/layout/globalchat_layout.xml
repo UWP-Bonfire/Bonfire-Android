@@ -53,22 +53,12 @@
 
             <ImageButton
                 android:id="@+id/text_chat_list_message"
-                android:layout_width="60dp"
+                android:layout_width="124dp"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/chat_bubble"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="2dp"
                 style="@style/imagebutton"/>
-
-
-            <ImageButton
-                android:id="@+id/text_chat_list_message_options"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/dots_vertical"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="2dp"
-                style="@style/imagebutton" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -64,7 +64,7 @@
                 android:id="@+id/text_chat_list_message_options"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/dots_vertical"
+                app:srcCompat="@drawable/volume_mute"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="2dp"
                 style="@style/imagebutton" />

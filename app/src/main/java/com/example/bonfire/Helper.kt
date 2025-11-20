@@ -205,9 +205,15 @@ class Helper: AppCompatActivity() {
                 Log.d(TAG, "adding listener $i to chat with '${friend["name"]}', groupchatId:'${friend["documentPath"]}'")
                 for (dc in snapshots!!.documentChanges) {
                     val messageTimestamp = dc.document.data["timestamp"] as Timestamp
+
+                    // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
+                    val sharedPref = (context as Activity).getPreferences(MODE_PRIVATE)
+                    val isFriendMuted : Int = sharedPref.getInt(dc.document.data["senderId"].toString(), 0)
+
                     if (dc.type == DocumentChange.Type.ADDED
                         && messageTimestamp > now
-                        && dc.document.data["senderId"] != uid) {
+                        && dc.document.data["senderId"] != uid
+                        && isFriendMuted == 0) {
                         Log.d(TAG, "Received notification from '${friend["name"]}'")
                         attemptNotification(friend["name"].toString(),
                             dc.document.data["text"].toString(),
