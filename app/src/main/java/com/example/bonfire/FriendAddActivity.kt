@@ -39,6 +39,8 @@ class FriendAddActivity : AppCompatActivity() {
             sendFriendRequest(friendName)
         }
 
+        helper.listenForNotifs(uid ?: "", this)
+
         populateFriendRequestList()
         defineBottomNavButtons()
     }

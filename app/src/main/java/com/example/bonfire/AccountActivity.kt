@@ -1,22 +1,16 @@
 package com.example.bonfire
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +22,7 @@ class AccountActivity : AppCompatActivity() {
     lateinit var TAG:String
     val helper = Helper()
     private val channelId = "i.apps.notifications" // Unique channel ID for notifications
-    private val description = "Test notification"  // Description for the notification channel
+    private val description = "Message notification"  // Description for the notification channel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +75,7 @@ class AccountActivity : AppCompatActivity() {
             child.setOnClickListener {
                 // Update the "avatar" field of the user 
                 val userRef = db.collection("users").document(user?.uid ?: "")
-                val avatar = "/images/icon" + (i + 1).toString()  + ".png"
+                val avatar = "/bonfire-backend/src/assets/icons/icon${(i + 1)}.png"
                 userRef
                     .update("avatar", avatar)
                     .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
@@ -92,32 +86,12 @@ class AccountActivity : AppCompatActivity() {
             }
         }
 
-        sendNotif()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        helper.listenForNotifs(uid ?: "", this)
+
         defineBottomNavButtons()
     }
 
-    private fun sendNotif() {
-        val notifButton: Button = findViewById(R.id.button_test)
-        notifButton.setOnClickListener {
-            // Request runtime permission for notifications on Android 13 and higher
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                        101
-                    )
-                    return@setOnClickListener
-                }
-            }
-            val helper = Helper()
-            helper.sendNotification("Frogger25", "test!", this) // Trigger the notification
-        }
-    }
 
     private fun defineBottomNavButtons() {
         // go to chat screen

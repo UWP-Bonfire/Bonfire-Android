@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.imageview.ShapeableImageView
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
+import androidx.core.content.edit
 
 
 class GroupChatListActivity : AppCompatActivity() {
@@ -71,10 +73,11 @@ class GroupChatListActivity : AppCompatActivity() {
             finish()
         }
 
+        helper.listenForNotifs(uid ?: "", this)
+
         defineBottomNavButtons()
     }
 
-    // TODO
     // Generate list of friends, with a button that will open the specific private message message with them
     private fun populateFriendList(db: FirebaseFirestore, userFriends:List<String>) {
         val groupChatList : LinearLayout = findViewById(R.id.list_messages_LinearLayout)
@@ -106,6 +109,27 @@ class GroupChatListActivity : AppCompatActivity() {
                         // Passes friendID to chat activity
                         intent.putExtra("id", friendId)
                         ContextCompat.startActivity(this, intent, null)
+                    }
+
+                    // button listener to toggle mute
+                    val muteButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message_options)
+                    muteButton.setOnClickListener {
+                        // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
+                        val sharedPref = this.getPreferences(MODE_PRIVATE)
+                        var isFriendMuted : Int = sharedPref.getInt(friendId, 0)
+
+                        // toggle if friend is muted, 0 <-> 1 / false <-> true
+                        isFriendMuted = -isFriendMuted + 1
+
+                        sharedPref.edit {
+                            putInt(friendId, isFriendMuted)
+                        }
+
+                        if (isFriendMuted == 0){
+                            Toast.makeText(baseContext,"${friendName.text} has been unmuted.", Toast.LENGTH_SHORT).show()
+                        } else{
+                            Toast.makeText(baseContext,"${friendName.text} has been muted.", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                      displayUnreadBubble(friendView, friendId, friendData)
