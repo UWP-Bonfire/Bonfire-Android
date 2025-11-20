@@ -71,10 +71,11 @@ class GroupChatListActivity : AppCompatActivity() {
             finish()
         }
 
+        helper.listenForNotifs(uid ?: "", this)
+
         defineBottomNavButtons()
     }
 
-    // TODO
     // Generate list of friends, with a button that will open the specific private message message with them
     private fun populateFriendList(db: FirebaseFirestore, userFriends:List<String>) {
         val groupChatList : LinearLayout = findViewById(R.id.list_messages_LinearLayout)
