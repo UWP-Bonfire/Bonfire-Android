@@ -137,44 +137,46 @@ class Helper: AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null) {
                     val userData = document.data as MutableMap<String, Object>
-                    val userFriends = userData["friends"] as List<String>
-                    Log.d(TAG, "friends found $userFriends")
-                    for (friend in userFriends){
-                        // get data of friend
-                        var friendData : Map<String, Any>
-                        val docRef = db.collection("users").document(friend)
-                        docRef.get()
-                        .addOnSuccessListener { friendDoc ->
-                            if (friendDoc != null) {
-                                val friendDictionary : MutableMap<String, String> = mutableMapOf()
-                                friendData = friendDoc.data!!
-                                //Log.d(TAG, "data of friend: ${friendData["name"]} found")
+                    if(userData["friends"] != null){
+                        val userFriends = userData["friends"] as List<String>
+                        Log.d(TAG, "friends found $userFriends")
+                        for (friend in userFriends){
+                            // get data of friend
+                            var friendData : Map<String, Any>
+                            val docRef = db.collection("users").document(friend)
+                            docRef.get()
+                            .addOnSuccessListener { friendDoc ->
+                                if (friendDoc != null) {
+                                    val friendDictionary : MutableMap<String, String> = mutableMapOf()
+                                    friendData = friendDoc.data!!
+                                    //Log.d(TAG, "data of friend: ${friendData["name"]} found")
 
-                                // make dictionary of friends ID, avatar, and documentPath of private chat with user
-                                val chatIdArray = arrayOf(uid, friend)
-                                chatIdArray.sort()
-                                val chatId = chatIdArray.joinToString("_")
+                                    // make dictionary of friends ID, avatar, and documentPath of private chat with user
+                                    val chatIdArray = arrayOf(uid, friend)
+                                    chatIdArray.sort()
+                                    val chatId = chatIdArray.joinToString("_")
 
-                                friendDictionary["documentPath"] = "chats/$chatId/messages"
-                                friendDictionary["name"] = friendData["name"].toString()
-                                friendDictionary["friendId"] = friend
-                                friendDictionary["friendAvatar"] = friendData["avatar"].toString()
-                                listOfFriends.add(friendDictionary)
+                                    friendDictionary["documentPath"] = "chats/$chatId/messages"
+                                    friendDictionary["name"] = friendData["name"].toString()
+                                    friendDictionary["friendId"] = friend
+                                    friendDictionary["friendAvatar"] = friendData["avatar"].toString()
+                                    listOfFriends.add(friendDictionary)
 
-                                // once finished (aka after the last friend)
-                                // this strange logic is to avoid async issues simply
-                                Log.d(TAG, "listOfFriends.size: ${listOfFriends.size}")
-                                if (listOfFriends.size == userFriends.size){
-                                    Log.d(TAG, "created dictionaries of friend data: $listOfFriends")
-                                    // create the notification listeners for each friend
-                                    createNotificationListeners(listOfFriends, context, uid)
+                                    // once finished (aka after the last friend)
+                                    // this strange logic is to avoid async issues simply
+                                    Log.d(TAG, "listOfFriends.size: ${listOfFriends.size}")
+                                    if (listOfFriends.size == userFriends.size){
+                                        Log.d(TAG, "created dictionaries of friend data: $listOfFriends")
+                                        // create the notification listeners for each friend
+                                        createNotificationListeners(listOfFriends, context, uid)
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document")
                                 }
-                            } else {
-                                Log.d(TAG, "No such document")
                             }
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.d(TAG, "get failed with ", exception)
+                            .addOnFailureListener { exception ->
+                                Log.d(TAG, "get failed with ", exception)
+                            }
                         }
                     }
                 } else {
