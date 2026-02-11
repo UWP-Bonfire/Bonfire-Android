@@ -115,7 +115,7 @@ class GroupChatListActivity : AppCompatActivity() {
                     val muteButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message_options)
                     muteButton.setOnClickListener {
                         // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
-                        val sharedPref = this.getPreferences(MODE_PRIVATE)
+                        val sharedPref = this.getSharedPreferences("muted", MODE_PRIVATE)
                         var isFriendMuted : Int = sharedPref.getInt(friendId, 0)
 
                         // toggle if friend is muted, 0 <-> 1 / false <-> true
