@@ -45,7 +45,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_username_edit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -62,7 +65,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signup_email_edit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +87,10 @@
             android:id="@+id/signup_password_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
