@@ -96,10 +96,10 @@ class GroupChatListActivity : AppCompatActivity() {
                     val friendView = LayoutInflater.from(this).inflate(R.layout.groupchat_layout, null, false)
 
                     val friendName : TextView = friendView.findViewById(R.id.text_chat_list_user)
-                    friendName.text = friendData?.get("name") as String
+                    friendName.text = (friendData?.get("name") ?: "") as String
 
                     val friendAvatar : ShapeableImageView = friendView.findViewById(R.id.text_chat_list_avatar)
-                    friendAvatar.setImageResource(helper.getAvatarId(friendData["avatar"] as String?))
+                    friendAvatar.setImageResource(helper.getAvatarId(((friendData?.get("avatar")) ?: "") as String?))
 
                     // Generate button listener that will open chat with friend
                     val openChatButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message)
@@ -115,7 +115,7 @@ class GroupChatListActivity : AppCompatActivity() {
                     val muteButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message_options)
                     muteButton.setOnClickListener {
                         // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
-                        val sharedPref = this.getPreferences(MODE_PRIVATE)
+                        val sharedPref = this.getSharedPreferences("muted", MODE_PRIVATE)
                         var isFriendMuted : Int = sharedPref.getInt(friendId, 0)
 
                         // toggle if friend is muted, 0 <-> 1 / false <-> true
@@ -148,7 +148,7 @@ class GroupChatListActivity : AppCompatActivity() {
         (loading.parent as ViewManager).removeView(loading)
     }
 
-    fun displayUnreadBubble(friendView: View, friendId:String, friendData:Map<String, Any>){
+    fun displayUnreadBubble(friendView: View, friendId:String, friendData:Map<String, Any>?){
         // Keep or remove unread bubble based on if last message in chat is unread (and isn't from you)
         // filter for first message of dm
         db.collection(getChatIdWithFriend(friendId))
@@ -159,7 +159,7 @@ class GroupChatListActivity : AppCompatActivity() {
             for (chatDoc in chatDocs){
                 if (chatDoc != null) {
                     val chatData = chatDoc.data
-                    Log.d(TAG, "read:${chatData["read"]}. newest message found in chat with ${friendData["name"]}, '${chatDoc.data["text"]}'" )
+                    Log.d(TAG, "read:${chatData["read"] ?: ""}. newest message found in chat with ${friendData?.get("name") ?: "" }, '${chatDoc.data["text"] ?: ""}'" )
                     // If it's an old message without the "read" field, it will be assumed to be read
                     if (chatData["read"] == false       // If not read
                     && chatData["senderId"] != uid) {   // If you sent the last message, you've obviously read all the recent messages

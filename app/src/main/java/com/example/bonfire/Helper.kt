@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
-import kotlin.collections.set
 
 class Helper: AppCompatActivity() {
     private val TAG = "Helper"
@@ -128,64 +130,53 @@ class Helper: AppCompatActivity() {
     //      friends ID, name, avatar, and documentPath of private chat with user
     // Then calls createNotificationListeners() with list of dictionaries
     fun listenForNotifs(uid:String, context:Context){
-        val listOfFriends : MutableList<Map<String, String>> = mutableListOf()
+        Log.d(TAG, "listenForNotifs called")
+
         val db = Firebase.firestore
-
-        // get list of user's friends
         val userRef = db.collection("users").document(uid)
+
         userRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val userData = document.data as MutableMap<String, Object>
-                    if(userData["friends"] != null){
-                        val userFriends = userData["friends"] as List<String>
-                        Log.d(TAG, "friends found $userFriends")
-                        for (friend in userFriends){
-                            // get data of friend
-                            var friendData : Map<String, Any>
-                            val docRef = db.collection("users").document(friend)
-                            docRef.get()
-                            .addOnSuccessListener { friendDoc ->
-                                if (friendDoc != null) {
-                                    val friendDictionary : MutableMap<String, String> = mutableMapOf()
-                                    friendData = friendDoc.data!!
-                                    //Log.d(TAG, "data of friend: ${friendData["name"]} found")
+        .addOnSuccessListener { document ->
+            if (document == null || document.data == null) return@addOnSuccessListener
 
-                                    // make dictionary of friends ID, avatar, and documentPath of private chat with user
-                                    val chatIdArray = arrayOf(uid, friend)
-                                    chatIdArray.sort()
-                                    val chatId = chatIdArray.joinToString("_")
+            val userFriends = document.get("friends") as? List<String> ?: return@addOnSuccessListener
+            Log.d(TAG, "friends found $userFriends")
 
-                                    friendDictionary["documentPath"] = "chats/$chatId/messages"
-                                    friendDictionary["name"] = friendData["name"].toString()
-                                    friendDictionary["friendId"] = friend
-                                    friendDictionary["friendAvatar"] = friendData["avatar"].toString()
-                                    listOfFriends.add(friendDictionary)
+            val tasks = mutableListOf<Task<DocumentSnapshot>>()
 
-                                    // once finished (aka after the last friend)
-                                    // this strange logic is to avoid async issues simply
-                                    Log.d(TAG, "listOfFriends.size: ${listOfFriends.size}")
-                                    if (listOfFriends.size == userFriends.size){
-                                        Log.d(TAG, "created dictionaries of friend data: $listOfFriends")
-                                        // create the notification listeners for each friend
-                                        createNotificationListeners(listOfFriends, context, uid)
-                                    }
-                                } else {
-                                    Log.d(TAG, "No such document")
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.d(TAG, "get failed with ", exception)
-                            }
-                        }
-                    }
-                } else {
-                    Log.d(TAG, "No such document")
+            // create all friend fetch tasks first
+            for (friend in userFriends) {
+                val task = db.collection("users").document(friend).get()
+                tasks.add(task)
+            }
+
+            // wait for ALL to finish
+            Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
+            .addOnSuccessListener { results ->
+                val listOfFriends = mutableListOf<Map<String, String>>()
+
+                for ((index, friendDoc) in results.withIndex()) {
+                    val friend = userFriends[index]
+                    val friendData = friendDoc.data
+
+                    val chatIdArray = arrayOf(uid, friend)
+                    chatIdArray.sort()
+                    val chatId = chatIdArray.joinToString("_")
+
+                    listOfFriends.add(
+                        mapOf(
+                            "documentPath" to "chats/$chatId/messages",
+                            "name" to friendData?.get("name").toString(),
+                            "friendId" to friend,
+                            "friendAvatar" to friendData?.get("avatar").toString()
+                        )
+                    )
                 }
+
+                Log.d(TAG, "created dictionaries of friend data: $listOfFriends")
+                createNotificationListeners(listOfFriends, context, uid)
             }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
+        }
     }
 
     fun createNotificationListeners(list:MutableList<Map<String, String>>, context: Context, uid:String){
@@ -196,27 +187,28 @@ class Helper: AppCompatActivity() {
         val now = Timestamp.now()
         for (friend in list){
             i += 1
+            Log.d(TAG, "adding listener $i to chat with '${friend["name"]}', groupchatId:'${friend["documentPath"]}'")
+
 
             Firebase.firestore.collection(friend["documentPath"] ?: "")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     return@addSnapshotListener
                 } else{
-                    Log.w(TAG,  "addSnapshotListener $i: $e")
+                    Log.w(TAG,  "addSnapshotListener $i. Error: $e")
                 }
-                Log.d(TAG, "adding listener $i to chat with '${friend["name"]}', groupchatId:'${friend["documentPath"]}'")
                 for (dc in snapshots!!.documentChanges) {
                     val messageTimestamp = dc.document.data["timestamp"] as Timestamp
 
                     // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
-                    val sharedPref = (context as Activity).getPreferences(MODE_PRIVATE)
-                    val isFriendMuted : Int = sharedPref.getInt(dc.document.data["senderId"].toString(), 0)
+                    val sharedPref = (context as Activity).getSharedPreferences("muted", MODE_PRIVATE)
+                    val friendNotMuted : Boolean = sharedPref.getInt(dc.document.data["senderId"].toString(), 0) == 0
 
+                    Log.d(TAG, "Received notification from '${friend["name"]}. Friend muted? ${!friendNotMuted}'")
                     if (dc.type == DocumentChange.Type.ADDED
                         && messageTimestamp > now
                         && dc.document.data["senderId"] != uid
-                        && isFriendMuted == 0) {
-                        Log.d(TAG, "Received notification from '${friend["name"]}'")
+                        && friendNotMuted) {
                         attemptNotification(friend["name"].toString(),
                             dc.document.data["text"].toString(),
                             context,

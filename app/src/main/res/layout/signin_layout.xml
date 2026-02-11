@@ -34,7 +34,7 @@
         android:id="@+id/signin_email_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username or email"
+        android:hint="Email"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/signin_password_input"
         app:layout_constraintEnd_toEndOf="parent"
