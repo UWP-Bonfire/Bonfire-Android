@@ -9,10 +9,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
@@ -20,12 +22,34 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.storage
 
 class Helper: AppCompatActivity() {
     private val TAG = "Helper"
     private val channelId = "i.apps.notifications" // Unique channel ID for notifications
     private val description = "Test notification"  // Description for the notification channel
     private val notificationId = 1234 // Unique identifier for the notification
+
+    fun setProfilePicture(context: Context, avatarPath: String, imageView: ImageView){
+        val storage = Firebase.storage
+        try{
+            val gsReference = storage.getReferenceFromUrl(avatarPath)
+            gsReference.downloadUrl.addOnSuccessListener { uri ->
+                Log.d(TAG, "avatar uri loaded $uri")
+                // Download directly from StorageReference using Glide
+                Glide.with(context)
+                    .load(uri)
+                    .placeholder(R.drawable.default_pfp)
+                    .into(imageView)
+            }.addOnFailureListener { e ->
+                Log.e(TAG, "Couldn't get avatar uri: $e")
+            }
+        } catch (e : IllegalArgumentException){
+            imageView.setImageResource(R.drawable.default_pfp)
+            Log.e(TAG, "Profile picture $avatarPath invalid: $e")
+        }
+    }
 
     // ex. set message with "avatar" = "/images/icon1" to R.id.icon1
     // --- Avatar mapping --- (terribly hardcoded)
