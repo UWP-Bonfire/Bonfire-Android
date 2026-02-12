@@ -84,8 +84,8 @@ class ChatActivity : AppCompatActivity() {
                         chatName.text = (data?.get("name") ?: "") as String
 
                         val friendAvatar : ShapeableImageView = findViewById(R.id.chat_cardView_UserIcon)
-                        friendAvatar.setImageResource(helper.getAvatarId(data?.get("avatar")?.toString()))
-
+                        val avatar = (data?.get("avatar") ?: "") as String
+                        helper.setProfilePicture(this, avatar, friendAvatar)
                     } else {
                         Log.d(TAG, "No such document")
                     }

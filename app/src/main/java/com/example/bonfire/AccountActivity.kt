@@ -16,6 +16,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import androidx.core.view.size
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.storage
 
 
 class AccountActivity : AppCompatActivity() {
@@ -59,8 +61,10 @@ class AccountActivity : AppCompatActivity() {
                 accountEmailText.text = (data?.get("email") ?: "") as String
                 accountUserText.text = (data?.get("name") ?: "") as String
 
-                val avatarPath = data?.get("avatar")?.toString()
-                accountAvatarImageView.setImageResource(helper.getAvatarId(avatarPath))
+                // Create a reference to a file from a Google Cloud Storage URI
+                val avatarPath = (data?.get("avatar") ?: "") as String
+
+                helper.setProfilePicture(this, avatarPath, accountAvatarImageView)
             } else {
                 Log.d(TAG, "No such document")
             }
@@ -69,20 +73,33 @@ class AccountActivity : AppCompatActivity() {
             Log.d(TAG, "get failed with ", exception)
         }
 
+        val storagePath = "gs://bonfire-d8db1.firebasestorage.app/Profile_Pictures/"
         val avatarGrid: GridLayout = findViewById(R.id.account_grid)
         for (i in 0..<avatarGrid.size) {
             val child: ShapeableImageView = (avatarGrid as ViewGroup).getChildAt(i) as ShapeableImageView
             child.setOnClickListener {
                 // Update the "avatar" field of the user 
                 val userRef = db.collection("users").document(user?.uid ?: "")
-                val avatar = "/bonfire-backend/src/assets/icons/icon${(i + 1)}.png"
-                userRef
-                    .update("avatar", avatar)
-                    .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
-                    .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
-                // visually change icon
-                val accountAvatarImageView: ShapeableImageView = findViewById(R.id.account_avatar)
-                accountAvatarImageView.setImageResource(helper.getAvatarId(avatar))
+                val avatarUri = storagePath + "icon${(i + 1)}.png"
+
+                val storage = Firebase.storage
+                val gsReference = storage.getReferenceFromUrl(avatarUri)
+
+                gsReference.downloadUrl.addOnSuccessListener { uri ->
+                    // visually change icon
+                    Glide.with(this)
+                        .load(uri)
+                        .into(accountAvatarImageView)
+
+                    // change field in db
+                    userRef
+                        .update("avatar", uri)
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "Couldn't get avatar uri: $e")
+                }
+
             }
         }
 

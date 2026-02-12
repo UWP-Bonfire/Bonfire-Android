@@ -1,10 +1,8 @@
 package com.example.bonfire
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +13,7 @@ import java.util.Date
 // RecyclerView adapter for the scrollable messages view
 class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPrivateChat: Boolean, val uid:String) : RecyclerView.Adapter<MessageAdapter.ItemViewHolder>() {
     val helper = Helper()
+    var mRecyclerView: RecyclerView? = null
 
     // Akin to onCreate method to initialize each instance (each message)
     inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -23,6 +22,11 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
         val textTextView: TextView = view.findViewById(R.id.message_text)
         val timestampTextView: TextView = view.findViewById(R.id.message_timestamp)
         val checkReadImageView: ImageView = view.findViewById(R.id.check_read)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        mRecyclerView = recyclerView
     }
 
     // Define each entry's layout/look
@@ -38,7 +42,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
         holder.displayNameTextView.text = message?.get("displayName").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
-        holder.photoURLTextView.setImageResource(helper.getAvatarId(message["photoURL"] as String?))
+        helper.setProfilePicture(mRecyclerView!!.context, message["photoURL"] as String, holder.photoURLTextView)
 
         // Only display read marks in DMs
         // if most recent show check mark (sent) or double check mark (read)

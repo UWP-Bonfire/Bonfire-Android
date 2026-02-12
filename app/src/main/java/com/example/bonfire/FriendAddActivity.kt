@@ -90,7 +90,7 @@ class FriendAddActivity : AppCompatActivity() {
                 requesterName.text = requesterData["name"] as String
 
                 val requesterAvatar : ShapeableImageView = requestView.findViewById(R.id.text_chat_list_avatar)
-                requesterAvatar.setImageResource(helper.getAvatarId(requesterData["avatar"] as String?))
+                helper.setProfilePicture(this, requesterData["avatar"] as String, requesterAvatar)
 
                 val acceptButton : ImageButton = requestView.findViewById(R.id.friend_request_yes)
                 acceptButton.setOnClickListener{
