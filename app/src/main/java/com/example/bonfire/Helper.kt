@@ -38,57 +38,13 @@ class Helper: AppCompatActivity() {
             gsReference.downloadUrl.addOnSuccessListener { uri ->
                 Log.d(TAG, "avatar uri loaded $uri")
                 // Download directly from StorageReference using Glide
-                Glide.with(context)
-                    .load(uri)
-                    .placeholder(R.drawable.default_pfp)
-                    .into(imageView)
+                Glide.with(context).load(uri).placeholder(R.drawable.default_pfp).into(imageView)
             }.addOnFailureListener { e ->
                 Log.e(TAG, "Couldn't get avatar uri: $e")
             }
         } catch (e : IllegalArgumentException){
             imageView.setImageResource(R.drawable.default_pfp)
             Log.e(TAG, "Profile picture $avatarPath invalid: $e")
-        }
-    }
-
-    // ex. set message with "avatar" = "/images/icon1" to R.id.icon1
-    // --- Avatar mapping --- (terribly hardcoded)
-    fun getAvatarId(avatarPath: String?) : Int {
-        return when (avatarPath) {
-            "/images/Logo.png" -> R.drawable.bonfire_icon
-            "/images/icon1.png" -> R.drawable.icon1
-            "/images/icon2.png" -> R.drawable.icon2
-            "/images/icon3.png" -> R.drawable.icon3
-            "/images/icon4.png" -> R.drawable.icon4
-            "/images/icon5.png" -> R.drawable.icon5
-            "/images/icon6.png" -> R.drawable.icon6
-            "/images/icon7.png" -> R.drawable.icon7
-            "/images/icon8.png" -> R.drawable.icon8
-            "/images/icon9.png" -> R.drawable.icon9
-            "/images/icon10.png" -> R.drawable.icon10
-            "/images/icon11.png" -> R.drawable.icon11
-            "/images/icon12.png" -> R.drawable.icon12
-            "/images/icon13.png" -> R.drawable.icon13
-            "/images/icon14.png" -> R.drawable.icon14
-            "/images/icon15.png" -> R.drawable.icon15
-
-            "/bonfire-backend/src/assets/icons/icon1.png" -> R.drawable.icon1
-            "/bonfire-backend/src/assets/icons/icon2.png" -> R.drawable.icon2
-            "/bonfire-backend/src/assets/icons/icon3.png" -> R.drawable.icon3
-            "/bonfire-backend/src/assets/icons/icon4.png" -> R.drawable.icon4
-            "/bonfire-backend/src/assets/icons/icon5.png" -> R.drawable.icon5
-            "/bonfire-backend/src/assets/icons/icon6.png" -> R.drawable.icon6
-            "/bonfire-backend/src/assets/icons/icon7.png" -> R.drawable.icon7
-            "/bonfire-backend/src/assets/icons/icon8.png" -> R.drawable.icon8
-            "/bonfire-backend/src/assets/icons/icon9.png" -> R.drawable.icon9
-            "/bonfire-backend/src/assets/icons/icon10.png" -> R.drawable.icon10
-            "/bonfire-backend/src/assets/icons/icon11.png" -> R.drawable.icon11
-            "/bonfire-backend/src/assets/icons/icon12.png" -> R.drawable.icon12
-            "/bonfire-backend/src/assets/icons/icon13.png" -> R.drawable.icon13
-            "/bonfire-backend/src/assets/icons/icon14.png" -> R.drawable.icon14
-            "/bonfire-backend/src/assets/icons/icon15.png" -> R.drawable.icon15
-
-            else -> R.drawable.default_pfp
         }
     }
 
