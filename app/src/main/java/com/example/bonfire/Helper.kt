@@ -22,7 +22,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
 
 class Helper: AppCompatActivity() {
@@ -30,7 +29,12 @@ class Helper: AppCompatActivity() {
     private val channelId = "i.apps.notifications" // Unique channel ID for notifications
     private val description = "Test notification"  // Description for the notification channel
     private val notificationId = 1234 // Unique identifier for the notification
+    val firebasePath = "gs://bonfire-d8db1.firebasestorage.app"
 
+
+    /**
+     * Loads profile picture from firebase and updates the ImageView with that image.
+     **/
     fun setProfilePicture(context: Context, avatarPath: String, imageView: ImageView){
         val storage = Firebase.storage
         try{
