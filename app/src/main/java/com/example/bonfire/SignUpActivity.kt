@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
@@ -84,8 +83,10 @@ class SignUpActivity : AppCompatActivity() {
                             val data = hashMapOf(
                                 "avatar" to "/images/Logo.png",
                                 "createdAt" to Timestamp.now(),
+                                "bio" to "Welcome to Bonfire!",
                                 "email" to email,
                                 "name" to username,
+                                "displayName" to username,
                             )
                             db.collection("users").document(uid.toString()).set(data)
 
