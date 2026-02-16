@@ -73,7 +73,7 @@ class AccountActivity : AppCompatActivity() {
             Log.d(TAG, "get failed with ", exception)
         }
 
-        val storagePath = "gs://bonfire-d8db1.firebasestorage.app/Profile_Pictures/"
+        val storagePath = helper.firebasePath + "/Profile_Pictures/"
         val avatarGrid: GridLayout = findViewById(R.id.account_grid)
         for (i in 0..<avatarGrid.size) {
             val child: ShapeableImageView = (avatarGrid as ViewGroup).getChildAt(i) as ShapeableImageView
