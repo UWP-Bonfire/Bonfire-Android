@@ -20,6 +20,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import android.widget.CheckBox
 
 
 class ChatActivity : AppCompatActivity() {
@@ -28,6 +29,12 @@ class ChatActivity : AppCompatActivity() {
     val db = Firebase.firestore
     val helper = Helper()
     private var chatList: ArrayList<Map<String, Any>?> = arrayListOf()
+    private var currentFriendId: String? = null
+
+    private fun notifPrefs() = getSharedPreferences("notif_limits", MODE_PRIVATE)
+    private fun unopenedKey(friendId: String) = "unopened_$friendId"
+    private fun limitEnabledKey(friendId: String) = "limit_enabled_$friendId"
+    private val OPEN_CHAT_KEY = "open_chat_friendId"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +45,30 @@ class ChatActivity : AppCompatActivity() {
         var friendId: String? = b?.getString("id") ?: ""
         if(friendId == ""){
             friendId = null
+        }
+        currentFriendId = friendId
+
+        val limitPings: CheckBox = findViewById(R.id.limitPings)
+
+        if (friendId != null) {
+            // Load saved state
+            val enabled = notifPrefs().getBoolean(limitEnabledKey(friendId), false)
+            limitPings.isChecked = enabled
+
+            // Save changes when user toggles
+            limitPings.setOnCheckedChangeListener { _, isChecked ->
+                notifPrefs().edit()
+                    .putBoolean(limitEnabledKey(friendId), isChecked)
+                    .apply()
+
+                // Optional (recommended): if user enables limiting, reset the counter so they don’t get “stuck”
+                if (isChecked) {
+                    notifPrefs().edit().putInt(unopenedKey(friendId), 0).apply()
+                }
+            }
+        } else {
+            // No friendId? Disable the option
+            limitPings.isEnabled = false
         }
 
         // get data of user so you don't have to request it every time
@@ -219,4 +250,23 @@ class ChatActivity : AppCompatActivity() {
     fun isPrivateChat(friendId:String?) : Boolean{
         return friendId != null
     }
+
+    override fun onResume() {
+        super.onResume()
+        val friendId = currentFriendId ?: return
+        notifPrefs().edit().putInt(unopenedKey(friendId), 0).apply()
+        // mark this chat open
+        notifPrefs().edit().putString(OPEN_CHAT_KEY, friendId).apply()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val friendId = currentFriendId ?: return
+
+        // clear only if we are still the open chat (avoid races)
+        if (notifPrefs().getString(OPEN_CHAT_KEY, null) == friendId) {
+            notifPrefs().edit().remove(OPEN_CHAT_KEY).apply()
+        }
+    }
+
 }

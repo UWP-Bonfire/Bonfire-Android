@@ -163,6 +163,27 @@ class Helper: AppCompatActivity() {
         }
     }
 
+    private fun notifPrefs(context: Context) =
+        (context as Activity).getSharedPreferences("notif_limits", MODE_PRIVATE)
+
+    private fun unopenedKey(friendId: String) = "unopened_$friendId"
+    private fun limitEnabledKey(friendId: String) = "limit_enabled_$friendId"
+    private val OPEN_CHAT_KEY = "open_chat_friendId"
+
+    private fun isLimitEnabled(context: Context, friendId: String): Boolean =
+        notifPrefs(context).getBoolean(limitEnabledKey(friendId), false)
+
+    private fun getOpenChatFriendId(context: Context): String? =
+        notifPrefs(context).getString(OPEN_CHAT_KEY, null)
+
+    fun incrementUnopened(context: Context, friendId: String): Int {
+        val p = notifPrefs(context)
+        val newVal = p.getInt(unopenedKey(friendId), 0) + 1
+        p.edit().putInt(unopenedKey(friendId), newVal).apply()
+        return newVal
+    }
+
+
     fun createNotificationListeners(list:MutableList<Map<String, String>>, context: Context, uid:String){
         // add listener for each DM with a friend, listening for any messages sent
         Log.d(TAG, "createNotificationListeners() called $list")
@@ -184,7 +205,7 @@ class Helper: AppCompatActivity() {
                 for (dc in snapshots!!.documentChanges) {
                     val messageTimestamp = dc.document.data["timestamp"] as Timestamp
 
-                    // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
+                    // get (or create if it does not exist) app preferences (where bools of whether a friend has been muted is saved)
                     val sharedPref = (context as Activity).getSharedPreferences("muted", MODE_PRIVATE)
                     val friendNotMuted : Boolean = sharedPref.getInt(dc.document.data["senderId"].toString(), 0) == 0
 
@@ -193,11 +214,38 @@ class Helper: AppCompatActivity() {
                         && messageTimestamp > now
                         && dc.document.data["senderId"] != uid
                         && friendNotMuted) {
-                        attemptNotification(friend["name"].toString(),
-                            dc.document.data["text"].toString(),
-                            context,
-                            friend["friendId"].toString()
-                        )
+
+                        val friendId = friend["friendId"].toString()
+
+                        // If user currently has this chat open, don’t notify (and don’t count it as unopened)
+                        if (getOpenChatFriendId(context) == friendId) {
+                            break
+                        }
+
+                        // If limiting is OFF for this friend: behave normally
+                        if (!isLimitEnabled(context, friendId)) {
+                            attemptNotification(
+                                friend["name"].toString(),
+                                dc.document.data["text"].toString(),
+                                context,
+                                friendId
+                            )
+                            break
+                        }
+
+                        // Limiting is ON: increment unopened count and suppress after 3
+                        val unopenedCount = incrementUnopened(context, friendId)
+                        if (unopenedCount <= 6) {
+                            attemptNotification(
+                                friend["name"].toString(),
+                                dc.document.data["text"].toString(),
+                                context,
+                                friendId
+                            )
+                            break
+                        } else {
+                            Log.d(TAG, "Suppressed notif for $friendId (unopenedCount=$unopenedCount > 3)")
+                        }
                     }
                     break
                 }
