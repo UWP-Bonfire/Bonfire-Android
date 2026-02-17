@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chat_content"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
@@ -58,6 +59,21 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="34sp" />
+
+            <CheckBox
+                android:id="@+id/limitPings"
+                android:layout_width="78dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="false"
+                android:lineSpacingExtra="0sp"
+                android:text="Limit \nPings"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/design_default_color_surface"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:visibility="visible" />
 
         </LinearLayout>
 
