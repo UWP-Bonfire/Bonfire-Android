@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
@@ -16,11 +15,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.storage
 
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     lateinit var TAG:String
+    val helper = Helper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,17 +82,34 @@ class SignUpActivity : AppCompatActivity() {
 
                             // add data to users/[uid]/
                             val uid: String? = auth.currentUser?.uid
-                            val data = hashMapOf(
-                                "avatar" to "/images/Logo.png",
-                                "createdAt" to Timestamp.now(),
-                                "email" to email,
-                                "name" to username,
-                            )
-                            db.collection("users").document(uid.toString()).set(data)
+                            val avatarPath = helper.firebasePath + "/Profile_Pictures/logo.png"
 
-                            val intent = Intent(this, GroupChatListActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            // I'm sorry for how nested and awful this function is
+                            val storage = Firebase.storage
+                            try{
+                                // Get URI of default profile picture
+                                val gsReference = storage.getReferenceFromUrl(avatarPath)
+                                gsReference.downloadUrl.addOnSuccessListener { uri ->
+                                    val data = hashMapOf(
+                                        "avatar" to uri,
+                                        "createdAt" to Timestamp.now(),
+                                        "bio" to "Welcome to Bonfire!",
+                                        "email" to email,
+                                        "name" to username,
+                                        "displayName" to username,
+                                    )
+                                    db.collection("users").document(uid.toString()).set(data)
+
+                                    val intent = Intent(this, GroupChatListActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }.addOnFailureListener { e ->
+                                    Log.e(TAG, "Couldn't get avatar uri: $e")
+                                }
+                            } catch (e : IllegalArgumentException){
+                                Log.e(TAG, "Profile picture $avatarPath not found: $e")
+                            }
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
