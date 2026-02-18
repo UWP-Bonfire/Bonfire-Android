@@ -32,37 +32,43 @@ class GroupChatListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.groupchat_list_layout)
 
-        var userData : Map<String, Object>
-        val userRef = db.collection("users").document(uid?: "")
-        userRef.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                userData = document.data as Map<String, Object>
-                val userFriends = userData["friends"]
-                Log.d(TAG, "user friend list found")
-                if (userFriends != null){
-                    populateFriendList(db, userFriends as List<String>)
-                } else{
-                    // Add text if user has no friends
-                    val groupChatList : LinearLayout = findViewById(R.id.list_messages_LinearLayout)
-                    val noFriendText = TextView(this)
-                    noFriendText.text = "You have no friends. Send a request!"
-                    noFriendText.setPadding(24, 24, 24, 24)
-                    noFriendText.textSize = 20.toFloat()
-                    noFriendText.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                    groupChatList.addView(noFriendText)
+        if (!uid.isNullOrEmpty()) {
+            var userData : Map<String, Object>
+            val userRef = db.collection("users").document(uid ?: "")
+            userRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    userData = document.data as Map<String, Object>
+                    val userFriends = userData["friends"]
+                    Log.d(TAG, "user friend list found")
+                    if (userFriends != null){
+                        populateFriendList(db, userFriends as List<String>)
+                    } else{
+                        // Add text if user has no friends
+                        val groupChatList : LinearLayout = findViewById(R.id.list_messages_LinearLayout)
+                        val noFriendText = TextView(this)
+                        noFriendText.text = "You have no friends. Send a request!"
+                        noFriendText.setPadding(24, 24, 24, 24)
+                        noFriendText.textSize = 20.toFloat()
+                        noFriendText.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                        groupChatList.addView(noFriendText)
 
-                    // delete loading icon
-                    val loading : TextView = findViewById(R.id.groupchat_list_loading)
-                    (loading.parent as ViewManager).removeView(loading)
+                        // delete loading icon
+                        val loading : TextView = findViewById(R.id.groupchat_list_loading)
+                        (loading.parent as ViewManager).removeView(loading)
+                    }
+                    Log.d(TAG, "${userFriends.toString()} user friend list found")
+                } else {
+                    Log.d(TAG, "No such document")
                 }
-                Log.d(TAG, "${userFriends.toString()} user friend list found")
-            } else {
-                Log.d(TAG, "No such document")
             }
-        }
-        .addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+        } else {
+             // Handle guest or unauthenticated mode for tests/etc
+             val loading : TextView = findViewById(R.id.groupchat_list_loading)
+             (loading.parent as? ViewManager)?.removeView(loading)
         }
 
         // Open global chat button
@@ -175,7 +181,7 @@ class GroupChatListActivity : AppCompatActivity() {
     }
 
     fun getChatIdWithFriend(friendId:String) : String{
-        val chatIdArray = arrayOf(uid, friendId)
+        val chatIdArray = arrayOf(uid ?: "me", friendId)
         chatIdArray.sort()
         val chatId = chatIdArray.joinToString("_")
         return "chats/$chatId/messages"

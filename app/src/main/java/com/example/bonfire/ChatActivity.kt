@@ -72,19 +72,21 @@ class ChatActivity : AppCompatActivity() {
         }
 
         // get data of user so you don't have to request it every time
-        var userData : Map<String, Object> = mapOf()
-        val docRef = db.collection("users").document(uid?: "")
-        docRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    userData = document.data as Map<String, Object>
-                } else {
-                    Log.d(TAG, "No such document")
+        if (!uid.isNullOrEmpty()) {
+            var userData : Map<String, Object> = mapOf()
+            val docRef = db.collection("users").document(uid ?: "")
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        userData = document.data as Map<String, Object>
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
+        }
 
         // Recycler view to display messages of chat //
 
@@ -133,7 +135,7 @@ class ChatActivity : AppCompatActivity() {
         var messagesPath = "messages"
 
         if (isPrivateChat(friendId)){
-            val chatIdArray = arrayOf(uid, friendId)
+            val chatIdArray = arrayOf(uid ?: "me", friendId)
             chatIdArray.sort()
             val chatId = chatIdArray.joinToString("_")
             messagesPath = "chats/$chatId/messages"
@@ -145,8 +147,6 @@ class ChatActivity : AppCompatActivity() {
             val messageSend = emailEditText.getText().toString()
             if (messageSend != "") {
                 val messageData = hashMapOf(
-                    "displayName" to userData["name"],
-                    "photoURL" to userData["avatar"],
                     "read" to false,
                     "senderId" to uid,
                     "text" to messageSend,
@@ -204,7 +204,7 @@ class ChatActivity : AppCompatActivity() {
         var messagesPath = "messages"
 
         if (isPrivateChat(friendId)){
-            val chatIdArray = arrayOf(uid, friendId)
+            val chatIdArray = arrayOf(uid ?: "me", friendId)
             chatIdArray.sort()
 
             chatId = chatIdArray.joinToString("_")
