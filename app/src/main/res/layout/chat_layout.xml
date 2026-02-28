@@ -93,57 +93,48 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:orientation="horizontal"
-    android:background="@color/dark_brown">
+    android:background="@color/dark_brown"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+        <ImageView
+            android:id="@+id/chat_MessageBar_ImageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="0"
+            android:alpha=".8"
+            android:layout_gravity="center"
+            android:contentDescription="Image send"
+            app:srcCompat="@drawable/image_area"
+            app:tint="@color/white" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/chat_MessageBar_TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:hint="Message"
-        android:textColorHint="@color/white"
-        app:boxStrokeColor="@color/light_brown"
-        app:boxStrokeWidth="0dp"
-        android:padding="8dp"
-        app:boxBackgroundColor="@color/semi_dark_brown">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/chat_MessageBar_TextInputEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/chat_MessageBar_TextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Message"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/light_brown"
+            app:boxStrokeWidth="0dp"
+            android:padding="8dp"
+            app:boxBackgroundColor="@color/semi_dark_brown">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chat_MessageBar_TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-
-    <ImageView
-        android:clickable="true"
-        android:id="@+id/chat_MessageBar_SendButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_weight="0"
-        android:alpha=".8"
-        android:contentDescription="Send"
-        android:paddingStart="0dp"
-        android:paddingEnd="8dp"
-        android:layout_gravity="center"
-        app:srcCompat="@drawable/send"
-        app:tint="@color/white" />
-
-<!--    <ImageView-->
-<!--        android:id="@+id/chat_MessageBar_ImageButton"-->
-<!--        android:layout_width="50dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:layout_weight="0"-->
-<!--        android:alpha=".8"-->
-<!--        android:paddingStart="0dp"-->
-<!--        android:paddingEnd="8dp"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:contentDescription="Image send"-->
-<!--        app:srcCompat="@drawable/image_area"-->
-<!--        app:tint="@color/white" />-->
-</LinearLayout>
-
-
-
+        <ImageView
+            android:clickable="true"
+            android:id="@+id/chat_MessageBar_SendButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="0"
+            android:alpha=".8"
+            android:contentDescription="Send"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/send"
+            app:tint="@color/white" />
+    </LinearLayout>
 </LinearLayout>

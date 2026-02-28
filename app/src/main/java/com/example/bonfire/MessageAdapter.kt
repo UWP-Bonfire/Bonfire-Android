@@ -22,6 +22,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
         val textTextView: TextView = view.findViewById(R.id.message_text)
         val timestampTextView: TextView = view.findViewById(R.id.message_timestamp)
         val checkReadImageView: ImageView = view.findViewById(R.id.check_read)
+        val messageImageView: ImageView = view.findViewById(R.id.message_image)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -32,7 +33,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
     // Define each entry's layout/look
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflatedView: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.message_layout, parent, false)
+            .inflate(R.layout.image_message_layout, parent, false)
         return ItemViewHolder(inflatedView)
     }
 
@@ -42,6 +43,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
         holder.displayNameTextView.text = message?.get("displayName").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
+        helper.setProfilePicture(mRecyclerView!!.context, message["imageUrl"] as String? ?: "", holder.messageImageView)
         helper.setProfilePicture(mRecyclerView!!.context, message["photoURL"] as String, holder.photoURLTextView)
 
         // Only display read marks in DMs
