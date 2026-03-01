@@ -54,10 +54,10 @@ class Helper: AppCompatActivity() {
 
     fun attemptNotification(title:String, contextText:String, context:Context, friendId:String){
         // Request runtime permission for notifications on Android 13 and higher
-        val activity = context as? Activity ?: return
+        val activity = context as? Activity
 
         // Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && activity != null) {
             if (ActivityCompat.checkSelfPermission(
                     activity,
                     Manifest.permission.POST_NOTIFICATIONS
@@ -73,7 +73,7 @@ class Helper: AppCompatActivity() {
         }
 
         // If permission is already granted or OS < 13
-        sendNotification(title, contextText, activity, friendId)
+        sendNotification(title, contextText, context, friendId)
     }
 
     /**
@@ -115,6 +115,7 @@ class Helper: AppCompatActivity() {
     // Then calls createNotificationListeners() with list of dictionaries
     fun listenForNotifs(uid:String, context:Context){
         Log.d(TAG, "listenForNotifs called")
+        if (uid.isEmpty()) return
 
         val db = Firebase.firestore
         val userRef = db.collection("users").document(uid)
@@ -164,16 +165,16 @@ class Helper: AppCompatActivity() {
     }
 
     private fun notifPrefs(context: Context) =
-        (context as Activity).getSharedPreferences("notif_limits", MODE_PRIVATE)
+        context.getSharedPreferences("notif_limits", MODE_PRIVATE)
 
     private fun unopenedKey(friendId: String) = "unopened_$friendId"
     private fun limitEnabledKey(friendId: String) = "limit_enabled_$friendId"
     private val OPEN_CHAT_KEY = "open_chat_friendId"
 
-    private fun isLimitEnabled(context: Context, friendId: String): Boolean =
+    fun isLimitEnabled(context: Context, friendId: String): Boolean =
         notifPrefs(context).getBoolean(limitEnabledKey(friendId), false)
 
-    private fun getOpenChatFriendId(context: Context): String? =
+    fun getOpenChatFriendId(context: Context): String? =
         notifPrefs(context).getString(OPEN_CHAT_KEY, null)
 
     fun incrementUnopened(context: Context, friendId: String): Int {
@@ -199,14 +200,15 @@ class Helper: AppCompatActivity() {
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     return@addSnapshotListener
-                } else{
-                    Log.w(TAG,  "addSnapshotListener $i. Error: $e")
+                } else if (snapshots == null) {
+                    return@addSnapshotListener
                 }
-                for (dc in snapshots!!.documentChanges) {
-                    val messageTimestamp = dc.document.data["timestamp"] as Timestamp
+                
+                for (dc in snapshots.documentChanges) {
+                    val messageTimestamp = dc.document.data["timestamp"] as? Timestamp ?: continue
 
                     // get (or create if it does not exist) app preferences (where bools of whether a friend has been muted is saved)
-                    val sharedPref = (context as Activity).getSharedPreferences("muted", MODE_PRIVATE)
+                    val sharedPref = context.getSharedPreferences("muted", MODE_PRIVATE)
                     val friendNotMuted : Boolean = sharedPref.getInt(dc.document.data["senderId"].toString(), 0) == 0
 
                     Log.d(TAG, "Received notification from '${friend["name"]}. Friend muted? ${!friendNotMuted}'")
