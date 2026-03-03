@@ -66,6 +66,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.test:core-ktx:1.6.1")
+    androidTestImplementation("androidx.test:core:1.6.1")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -105,20 +108,29 @@ val jacocoTestReport by tasks.registering(JacocoReport::class) {
 
     val fileFilter = listOf(
         "**/R.class",
-        "**/R$*.class",
+        "**/R\$*.class",
         "**/BuildConfig.*",
         "**/Manifest*.*",
         "**/*Test*.*",
         "android/**/*.*"
     )
-    val debugTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
+
+    val buildDir = layout.buildDirectory.get().asFile
+    
+    val javaClasses = fileTree("${buildDir}/intermediates/javac/debug") {
         exclude(fileFilter)
     }
-    val mainSrc = "${project.projectDir}/src/main/java"
+    val kotlinClasses = fileTree("${buildDir}/intermediates/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
 
-    sourceDirectories.setFrom(files(mainSrc))
-    classDirectories.setFrom(files(debugTree))
-    executionData.setFrom(fileTree(project.buildDir) {
-        include("jacoco/testDebugUnitTest.exec", "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec", "outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec")
+    classDirectories.setFrom(files(javaClasses, kotlinClasses))
+    sourceDirectories.setFrom(files("${projectDir}/src/main/java", "${projectDir}/src/main/kotlin"))
+    
+    executionData.setFrom(fileTree(buildDir) {
+        include(
+            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+            "outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec"
+        )
     })
 }

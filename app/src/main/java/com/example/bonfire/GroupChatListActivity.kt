@@ -9,6 +9,7 @@ import android.view.ViewManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -87,8 +88,12 @@ class GroupChatListActivity : AppCompatActivity() {
     // Generate list of friends, with a button that will open the specific private message message with them
     private fun populateFriendList(db: FirebaseFirestore, userFriends:List<String>) {
         val groupChatList : LinearLayout = findViewById(R.id.list_messages_LinearLayout)
+        val blockedPref = getSharedPreferences("blocked", MODE_PRIVATE)
 
         for (friendId in userFriends) {
+            // Skip if blocked
+            if (blockedPref.getBoolean(friendId, false)) continue
+
             Log.d(TAG, "friendId $friendId")
 
             // Find data of friend
@@ -119,25 +124,47 @@ class GroupChatListActivity : AppCompatActivity() {
                         ContextCompat.startActivity(this, intent, null)
                     }
 
-                    // button listener to toggle mute
-                    val muteButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message_options)
-                    muteButton.setOnClickListener {
-                        // get (or create if does not exist) app preferences (where bools of whether a friend has been muted is saved)
+                    // button listener to show dropdown menu for options
+                    val optionsButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message_options)
+                    optionsButton.setOnClickListener { view ->
+                        val popup = PopupMenu(this, view)
+                        popup.menuInflater.inflate(R.menu.chat_options_menu, popup.menu)
+
+                        // Update Mute menu item text based on current state
                         val sharedPref = this.getSharedPreferences("muted", MODE_PRIVATE)
-                        var isFriendMuted : Int = sharedPref.getInt(friendId, 0)
+                        val isFriendMuted : Int = sharedPref.getInt(friendId, 0)
+                        val muteItem = popup.menu.findItem(R.id.action_mute)
+                        muteItem.title = if (isFriendMuted == 1) "Unmute" else "Mute"
 
-                        // toggle if friend is muted, 0 <-> 1 / false <-> true
-                        isFriendMuted = -isFriendMuted + 1
+                        popup.setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.action_mute -> {
+                                    // toggle if friend is muted, 0 <-> 1 / false <-> true
+                                    val newMuteStatus = if (isFriendMuted == 1) 0 else 1
+                                    sharedPref.edit {
+                                        putInt(friendId, newMuteStatus)
+                                    }
 
-                        sharedPref.edit {
-                            putInt(friendId, isFriendMuted)
+                                    if (newMuteStatus == 0) {
+                                        Toast.makeText(baseContext, "${friendName.text} has been unmuted.", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(baseContext, "${friendName.text} has been muted.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    true
+                                }
+                                R.id.action_block -> {
+                                    blockedPref.edit {
+                                        putBoolean(friendId, true)
+                                        putString("name_$friendId", friendName.text.toString())
+                                    }
+                                    groupChatList.removeView(friendView)
+                                    Toast.makeText(baseContext, "Blocked ${friendName.text}", Toast.LENGTH_SHORT).show()
+                                    true
+                                }
+                                else -> false
+                            }
                         }
-
-                        if (isFriendMuted == 0){
-                            Toast.makeText(baseContext,"${friendName.text} has been unmuted.", Toast.LENGTH_SHORT).show()
-                        } else{
-                            Toast.makeText(baseContext,"${friendName.text} has been muted.", Toast.LENGTH_SHORT).show()
-                        }
+                        popup.show()
                     }
 
                      displayUnreadBubble(friendView, friendId, friendData)
@@ -153,7 +180,7 @@ class GroupChatListActivity : AppCompatActivity() {
         }
         // delete loading icon
         val loading : TextView = findViewById(R.id.groupchat_list_loading)
-        (loading.parent as ViewManager).removeView(loading)
+        (loading.parent as? ViewManager)?.removeView(loading)
     }
 
     fun displayUnreadBubble(friendView: View, friendId:String, friendData:Map<String, Any>?){

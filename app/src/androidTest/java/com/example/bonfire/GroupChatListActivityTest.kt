@@ -2,11 +2,15 @@ package com.example.bonfire
 
 import android.content.Context
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +22,6 @@ class GroupChatListActivityTest {
 
     @Before
     fun setUp() {
-        // Instantiate on main thread for logic tests
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
             activity = GroupChatListActivity()
         }
@@ -28,23 +31,30 @@ class GroupChatListActivityTest {
     fun testGetChatIdWithFriend() {
         val friendId = "friend123"
         val chatId = activity.getChatIdWithFriend(friendId)
-        
-        // The chatId should be "chats/sorted_uids/messages"
-        // Since uid is null during unit test instantiation, we check the structure
         assertTrue("Chat ID should start with chats/", chatId.startsWith("chats/"))
         assertTrue("Chat ID should end with /messages", chatId.endsWith("/messages"))
     }
 
     @Test
     fun testActivityLaunch() {
-        ActivityScenario.launch(GroupChatListActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                assertNotNull(activity)
-            }
+        ActivityScenario.launch(GroupChatListActivity::class.java).use {
+            onView(withId(R.id.list_content)).check(matches(isDisplayed()))
         }
     }
-}
 
-private fun assertTrue(message: String, condition: Boolean) {
-    org.junit.Assert.assertTrue(message, condition)
+    @Test
+    fun testOpenGlobalChat() {
+        ActivityScenario.launch(GroupChatListActivity::class.java).use {
+            onView(withId(R.id.text_chat_list_message)).perform(click())
+        }
+    }
+
+    @Test
+    fun testNavButtons() {
+        ActivityScenario.launch(GroupChatListActivity::class.java).use {
+            onView(withId(R.id.menu_button_friends)).check(matches(isDisplayed()))
+            onView(withId(R.id.menu_button_account)).check(matches(isDisplayed()))
+            onView(withId(R.id.menu_button_logout)).check(matches(isDisplayed()))
+        }
+    }
 }

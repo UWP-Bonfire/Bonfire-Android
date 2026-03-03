@@ -7,9 +7,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.Firebase
@@ -18,11 +21,12 @@ import com.google.firebase.firestore.firestore
 import androidx.core.view.size
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.storage
+import androidx.core.content.edit
 
 
 class AccountActivity : AppCompatActivity() {
-    lateinit var TAG:String
-    val helper = Helper()
+    private var tag: String = "account_activity"
+    private val helper = Helper()
     private val channelId = "i.apps.notifications" // Unique channel ID for notifications
     private val description = "Message notification"  // Description for the notification channel
 
@@ -48,29 +52,29 @@ class AccountActivity : AppCompatActivity() {
         val accountEmailText: TextView = findViewById(R.id.account_email)
         val accountAvatarImageView: ShapeableImageView = findViewById(R.id.account_avatar)
         
-        TAG = "account_activity"
-        
         val db = Firebase.firestore
         // get details of account
-        val docRef = db.collection("users").document(user?.uid ?: "")
-        docRef.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                val data = document.data
-                accountEmailText.text = (data?.get("email") ?: "") as String
-                accountUserText.text = (data?.get("name") ?: "") as String
+        if (user?.uid != null) {
+            val docRef = db.collection("users").document(user.uid)
+            docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    Log.d(tag, "DocumentSnapshot data: ${document.data}")
+                    val data = document.data
+                    accountEmailText.text = (data?.get("email") ?: "") as String
+                    accountUserText.text = (data?.get("name") ?: "") as String
 
-                // Create a reference to a file from a Google Cloud Storage URI
-                val avatarPath = (data?.get("avatar") ?: "") as String
+                    // Create a reference to a file from a Google Cloud Storage URI
+                    val avatarPath = (data?.get("avatar") ?: "") as String
 
-                helper.setProfilePicture(this, avatarPath, accountAvatarImageView)
-            } else {
-                Log.d(TAG, "No such document")
+                    helper.setProfilePicture(this, avatarPath, accountAvatarImageView)
+                } else {
+                    Log.d(tag, "No such document")
+                }
             }
-        }
-        .addOnFailureListener { exception ->
-            Log.d(TAG, "get failed with ", exception)
+            .addOnFailureListener { exception ->
+                Log.d(tag, "get failed with ", exception)
+            }
         }
 
         val storagePath = helper.firebasePath + "/Profile_Pictures/"
@@ -78,35 +82,89 @@ class AccountActivity : AppCompatActivity() {
         for (i in 0..<avatarGrid.size) {
             val child: ShapeableImageView = (avatarGrid as ViewGroup).getChildAt(i) as ShapeableImageView
             child.setOnClickListener {
+                val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
+
                 // Update the "avatar" field of the user 
-                val userRef = db.collection("users").document(user?.uid ?: "")
+                val userRef = db.collection("users").document(currentUid)
                 val avatarUri = storagePath + "icon${(i + 1)}.png"
 
                 val storage = Firebase.storage
-                val gsReference = storage.getReferenceFromUrl(avatarUri)
+                try {
+                    val gsReference = storage.getReferenceFromUrl(avatarUri)
 
-                gsReference.downloadUrl.addOnSuccessListener { uri ->
-                    // visually change icon
-                    Glide.with(this)
-                        .load(uri)
-                        .into(accountAvatarImageView)
+                    gsReference.downloadUrl.addOnSuccessListener { uri ->
+                        if (isDestroyed || isFinishing) return@addOnSuccessListener
+                        // visually change icon
+                        Glide.with(this)
+                            .load(uri)
+                            .into(accountAvatarImageView)
 
-                    // change field in db
-                    userRef
-                        .update("avatar", uri)
-                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
-                }.addOnFailureListener { e ->
-                    Log.e(TAG, "Couldn't get avatar uri: $e")
+                        // change field in db
+                        userRef
+                            .update("avatar", uri.toString())
+                            .addOnSuccessListener { Log.d(tag, "DocumentSnapshot successfully updated!") }
+                            .addOnFailureListener { e -> Log.w(tag, "Error updating document", e) }
+                    }.addOnFailureListener { e ->
+                        Log.e(tag, "Couldn't get avatar uri: $e")
+                    }
+                } catch (e: Exception) {
+                    Log.e(tag, "Error with avatar URI: $e")
                 }
-
             }
         }
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         helper.listenForNotifs(uid ?: "", this)
 
+        populateBlockedList()
         defineBottomNavButtons()
+    }
+
+    private fun populateBlockedList() {
+        val blockedPref = getSharedPreferences("blocked", MODE_PRIVATE)
+        val blockedLayout: LinearLayout = findViewById(R.id.account_blocked_list)
+        blockedLayout.removeAllViews()
+
+        val allEntries = blockedPref.all
+        for ((key, value) in allEntries) {
+            // Check if key is a user ID (not starting with name_)
+            if (value is Boolean && value && !key.startsWith("name_")) {
+                val friendId = key
+                val friendName = blockedPref.getString("name_$friendId", "Unknown") ?: "Unknown"
+
+                val row = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    setPadding(0, 8, 0, 8)
+                }
+
+                val nameText = TextView(this).apply {
+                    text = friendName
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                    setTextColor(Color.WHITE)
+                    textSize = 18f
+                }
+
+                val unblockButton = Button(this).apply {
+                    text = "Unblock"
+                    setOnClickListener {
+                        blockedPref.edit {
+                            remove(friendId)
+                            remove("name_$friendId")
+                        }
+                        populateBlockedList()
+                        Toast.makeText(this@AccountActivity, "Unblocked $friendName", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                row.addView(nameText)
+                row.addView(unblockButton)
+                blockedLayout.addView(row)
+            }
+        }
     }
 
 
@@ -135,4 +193,3 @@ class AccountActivity : AppCompatActivity() {
         }
     }
 }
-
