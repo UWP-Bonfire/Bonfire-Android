@@ -39,10 +39,10 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
     //Set values to the views based on the position of the recyclerView
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val message : Map<String, Any>? = data[position]
-        holder.displayNameTextView.text = message?.get("displayName").toString()
+        holder.displayNameTextView.text = (message?.get("displayName") ?: "Anonymous").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
-        helper.setProfilePicture(mRecyclerView!!.context, message["photoURL"] as String, holder.photoURLTextView)
+        helper.setProfilePicture(mRecyclerView!!.context, (message["photoURL"] ?: "") as String, holder.photoURLTextView)
 
         // Only display read marks in DMs
         // if most recent show check mark (sent) or double check mark (read)
