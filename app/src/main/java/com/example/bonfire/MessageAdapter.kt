@@ -33,18 +33,18 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
     // Define each entry's layout/look
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflatedView: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.image_message_layout, parent, false)
+            .inflate(R.layout.message_layout, parent, false)
         return ItemViewHolder(inflatedView)
     }
 
     //Set values to the views based on the position of the recyclerView
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val message : Map<String, Any>? = data[position]
-        holder.displayNameTextView.text = message?.get("displayName").toString()
+        holder.displayNameTextView.text = (message?.get("displayName") ?: "Anonymous").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
-        helper.setProfilePicture(mRecyclerView!!.context, message["imageUrl"] as String? ?: "", holder.messageImageView)
-        helper.setProfilePicture(mRecyclerView!!.context, message["photoURL"] as String, holder.photoURLTextView)
+        helper.setProfilePicture(mRecyclerView!!.context, (message["imageUrl"] ?: "") as String , holder.messageImageView)
+        helper.setProfilePicture(mRecyclerView!!.context, (message["photoURL"] ?: "") as String, holder.photoURLTextView)
 
         // Only display read marks in DMs
         // if most recent show check mark (sent) or double check mark (read)
