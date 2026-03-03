@@ -122,6 +122,7 @@ class AccountActivity : AppCompatActivity() {
 
     private fun populateBlockedList() {
         val blockedPref = getSharedPreferences("blocked", MODE_PRIVATE)
+        val mutedPref = getSharedPreferences("muted", MODE_PRIVATE)
         val blockedLayout: LinearLayout = findViewById(R.id.account_blocked_list)
         blockedLayout.removeAllViews()
 
@@ -154,6 +155,10 @@ class AccountActivity : AppCompatActivity() {
                         blockedPref.edit {
                             remove(friendId)
                             remove("name_$friendId")
+                        }
+                        // Also unmute the user when unblocking
+                        mutedPref.edit {
+                            remove(friendId)
                         }
                         populateBlockedList()
                         Toast.makeText(this@AccountActivity, "Unblocked $friendName", Toast.LENGTH_SHORT).show()

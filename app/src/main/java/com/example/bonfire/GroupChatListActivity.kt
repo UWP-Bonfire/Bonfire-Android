@@ -157,6 +157,10 @@ class GroupChatListActivity : AppCompatActivity() {
                                         putBoolean(friendId, true)
                                         putString("name_$friendId", friendName.text.toString())
                                     }
+                                    // Also mute the user when blocking
+                                    sharedPref.edit {
+                                        putInt(friendId, 1)
+                                    }
                                     groupChatList.removeView(friendView)
                                     Toast.makeText(baseContext, "Blocked ${friendName.text}", Toast.LENGTH_SHORT).show()
                                     true
