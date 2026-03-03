@@ -1,10 +1,12 @@
 package com.example.bonfire
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
@@ -18,10 +20,11 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
     // Akin to onCreate method to initialize each instance (each message)
     inner class ItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val displayNameTextView: TextView = view.findViewById(R.id.message_user)
-        val photoURLTextView: ImageView = view.findViewById(R.id.message_profile)
+        val avatarURLTextView: ImageView = view.findViewById(R.id.message_profile)
         val textTextView: TextView = view.findViewById(R.id.message_text)
         val timestampTextView: TextView = view.findViewById(R.id.message_timestamp)
         val checkReadImageView: ImageView = view.findViewById(R.id.check_read)
+        val messageImageView: ImageView = view.findViewById(R.id.message_image)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -39,10 +42,19 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
     //Set values to the views based on the position of the recyclerView
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val message : Map<String, Any>? = data[position]
-        holder.displayNameTextView.text = message?.get("displayName").toString()
+        holder.displayNameTextView.text = (message?.get("displayName") ?: "Anonymous").toString()
         holder.textTextView.text = message?.get("text")?.toString()
         holder.timestampTextView.text = formatTimestampToString(message?.get("timestamp") as Timestamp)
-        helper.setProfilePicture(mRecyclerView!!.context, message["photoURL"] as String, holder.photoURLTextView)
+        helper.setProfilePicture(mRecyclerView!!.context, (message["imageUrl"] ?: "") as String, holder.messageImageView)
+        helper.setProfilePicture(mRecyclerView!!.context, (message["photoURL"] ?: "") as String, holder.avatarURLTextView)
+
+        // photoURL is avatar url, imageUrl is the attached image
+        // If no attached image in message, hide imageView
+        if (message["imageUrl"] == null){
+            holder.messageImageView.isInvisible = true;
+            holder.messageImageView.layoutParams.height = 1;
+            holder.messageImageView.layoutParams.width = 1;
+        }
 
         // Only display read marks in DMs
         // if most recent show check mark (sent) or double check mark (read)
@@ -53,6 +65,7 @@ class MessageAdapter(private val data: ArrayList<Map<String, Any>?>, val inPriva
             holder.checkReadImageView.visibility = View.VISIBLE
         }
     }
+
 
     fun formatTimestampToString(timestamp: Timestamp): String{
         val timestampDate:Date = timestamp.toDate()

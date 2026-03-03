@@ -56,12 +56,22 @@
                 android:id="@+id/message_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/message_user"
-                app:layout_constraintBottom_toTopOf="@+id/message_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="260dp"
                 android:text="Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development. Its purpose is to permit a page layout to be designed, independently of the copy that will subsequently populate it, or to demonstrate various fonts of a typeface without meaningful text that could be distracting..."
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/message_image"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@id/message_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/message_timestamp"
+                android:src="@drawable/default_pfp"/>
+
             <!--Time stamp -->
             <TextView
                 android:id="@+id/message_timestamp"
@@ -69,14 +79,13 @@
                 android:layout_height="wrap_content"
                 android:text="11/14/2025 "
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@id/message_text"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
-
             <ImageView
                 android:id="@+id/check_read"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                app:layout_constraintTop_toBottomOf="@id/message_text"
+                app:layout_constraintTop_toBottomOf="@id/message_image"
                 app:layout_constraintStart_toEndOf="@id/message_timestamp"
                 android:src="@drawable/check"
                 android:visibility="invisible"
