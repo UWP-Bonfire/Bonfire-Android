@@ -41,6 +41,10 @@ class Helper: AppCompatActivity() {
             val gsReference = storage.getReferenceFromUrl(avatarPath)
             gsReference.downloadUrl.addOnSuccessListener { uri ->
                 Log.d(TAG, "avatar uri loaded $uri")
+                // Check if context is an Activity and if it is destroyed before calling Glide
+                if (context is Activity && (context.isDestroyed || context.isFinishing)) {
+                    return@addOnSuccessListener
+                }
                 // Download directly from StorageReference using Glide
                 Glide.with(context).load(uri).placeholder(R.drawable.default_pfp).into(imageView)
             }.addOnFailureListener { e ->
