@@ -3,12 +3,14 @@ package com.example.bonfire
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -19,14 +21,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.component1
 import com.google.firebase.storage.storage
-import java.io.File
 import java.util.UUID
 
 
@@ -44,6 +47,8 @@ class ChatActivity : AppCompatActivity() {
     private val OPEN_CHAT_KEY = "open_chat_friendId"
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var userData: Map<String, Object>
+    var emojiMenuOpen = false
+    var emojisPopulated = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +109,7 @@ class ChatActivity : AppCompatActivity() {
 
         val sendImageButton: ImageView = findViewById(R.id.chat_MessageBar_ImageButton)
         sendImageButton.setOnClickListener {
-            imagePickerLauncher.launch("image/*")
+            messageSendDropList(messagesPath)
         }
 
         // get data of user so you don't have to request it every time
@@ -171,24 +176,105 @@ class ChatActivity : AppCompatActivity() {
             // get name of friend
             val docRef = db.collection("users").document(friendId)
             docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        //Log.d("chatname", "DocumentSnapshot data: ${document.data}")
-                        val data = document.data
-                        val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
-                        chatName.text = (data?.get("name") ?: "") as String
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    //Log.d("chatname", "DocumentSnapshot data: ${document.data}")
+                    val data = document.data
+                    val chatName : TextView = findViewById(R.id.chat_cardView_UserName)
+                    chatName.text = (data?.get("name") ?: "") as String
 
-                        val friendAvatar : ShapeableImageView = findViewById(R.id.chat_cardView_UserIcon)
-                        val avatar = (data?.get("avatar") ?: "") as String
-                        helper.setProfilePicture(this, avatar, friendAvatar)
-                    } else {
-                        Log.d(TAG, "No such document")
+                    val friendAvatar : ShapeableImageView = findViewById(R.id.chat_cardView_UserIcon)
+                    val avatar = (data?.get("avatar") ?: "") as String
+                    helper.setProfilePicture(this, avatar, friendAvatar)
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+        }
+    }
+
+    fun messageSendDropList(messagesPath:String) {
+        val optionsButton: ImageView = findViewById(R.id.chat_MessageBar_ImageButton)
+        val emojiList: HorizontalScrollView = findViewById(R.id.emoji_list)
+
+        optionsButton.setOnClickListener { view ->
+            if (!emojisPopulated){
+                populateEmojiList(messagesPath)
+            }
+
+            // if emoji menu already open, close it
+            if (emojiMenuOpen) {
+                closeEmojiList()
+            }
+
+            val popup = PopupMenu(this, view)
+            popup.menuInflater.inflate(R.menu.message_options_menu, popup.menu)
+
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_image -> {
+                        imagePickerLauncher.launch("image/*")
+                        true
+                    }
+                    R.id.action_emoji -> {
+                        optionsButton.setImageResource(R.drawable.close)
+                        emojiList.visibility = View.VISIBLE
+                        emojiMenuOpen = true
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
+    }
+
+    fun closeEmojiList(){
+        val emojiList: HorizontalScrollView = findViewById(R.id.emoji_list)
+        val optionsButton: ImageView = findViewById(R.id.chat_MessageBar_ImageButton)
+        emojiList.visibility = View.GONE
+        optionsButton.setImageResource(R.drawable.plus)
+        emojiMenuOpen = false
+
+    }
+
+    /**
+    Download all emojis in firebase Emojis/ and add to scrollview.
+     */
+    fun populateEmojiList(messagesPath:String){
+        val emojiList: LinearLayout = findViewById(R.id.emoji_list_linearLayout)
+        val storage = Firebase.storage
+        val listRef = storage.reference.child("Emojis")
+        try{
+            listRef.listAll().addOnSuccessListener { (items) ->
+                for (item in items){
+                    Log.d(TAG, item.path)
+                    val gsReference = storage.getReferenceFromUrl(helper.firebasePath + "/" + item.path)
+                    gsReference.downloadUrl.addOnSuccessListener { uri ->
+                        // After successfully loading image from db, add image to scrollview
+                        val emojiImage = ImageView(this)
+                        val size = (70 * resources.displayMetrics.density).toInt()
+                        val params = LinearLayout.LayoutParams(size, size)
+                        emojiImage.layoutParams = params
+                        Glide.with(this).load(uri).placeholder(R.drawable.default_pfp).into(emojiImage)
+                        emojiList.addView(emojiImage)
+
+                        emojiImage.setOnClickListener {
+                            closeEmojiList()
+                            sendImageMessage(uri.toString(), userData, messagesPath)
+                        }
+                    }.addOnFailureListener { e ->
+                        Log.e(TAG, "Couldn't get avatar uri: $e")
                     }
                 }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "get failed with ", exception)
-                }
+            }
+        } catch (e : IllegalArgumentException){
+            Log.e(TAG, "Couldn't load emojis: $e")
         }
+        emojisPopulated = true
     }
 
     private fun uploadImageToFirebase(imageUri: Uri, userData:Map<String, Object>, messagesPath:String, recyclerView: RecyclerView) {
@@ -310,7 +396,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun isPrivateChat(friendId:String?) : Boolean{
-        return friendId != null
+        return !(friendId == null || friendId == "")
     }
 
     override fun onResume() {

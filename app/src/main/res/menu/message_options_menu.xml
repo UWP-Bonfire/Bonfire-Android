@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_image"
+        android:title="Send image"
+        android:icon="@drawable/image_area"/>
+    <item
+        android:id="@+id/action_emoji"
+        android:title="Send emoji"
+        android:icon="@drawable/sticker_emoji"/>
+</menu>

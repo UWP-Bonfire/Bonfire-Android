@@ -13,6 +13,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.Firebase
@@ -73,7 +74,8 @@ class GroupChatListActivity : AppCompatActivity() {
         }
 
         // Open global chat button
-        val openChatButton: ImageButton = findViewById(R.id.text_chat_list_message)
+        val globalChat = findViewById<View>(R.id.global_chat)
+        val openChatButton = globalChat.findViewById<CardView>(R.id.card_chat_list_message)
         openChatButton.setOnClickListener {
             val intent = Intent(this, ChatActivity::class.java)
             startActivity(intent)
@@ -115,7 +117,7 @@ class GroupChatListActivity : AppCompatActivity() {
 
 
                     // Generate button listener that will open chat with friend
-                    val openChatButton: ImageButton = friendView.findViewById(R.id.text_chat_list_message)
+                    val openChatButton = friendView.findViewById<CardView>(R.id.card_chat_list_message)
                     openChatButton.setOnClickListener {
                         val intent = Intent(this, ChatActivity::class.java)
 
