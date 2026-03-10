@@ -88,6 +88,22 @@
         >
     </androidx.recyclerview.widget.RecyclerView>
 
+    <HorizontalScrollView
+        android:id="@+id/emoji_list"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/emoji_list_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/dark_brown"
+            android:padding="8dp">
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
     <LinearLayout
     android:id="@+id/chat_MessageBar"
     android:layout_width="match_parent"
@@ -104,7 +120,7 @@
             android:alpha=".8"
             android:layout_gravity="center"
             android:contentDescription="Image send"
-            app:srcCompat="@drawable/image_area"
+            app:srcCompat="@drawable/plus"
             app:tint="@color/white" />
 
         <com.google.android.material.textfield.TextInputLayout
