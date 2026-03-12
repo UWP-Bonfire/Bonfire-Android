@@ -232,6 +232,10 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+    fun recordVoiceMessage(){
+        
+    }
+
     fun closeEmojiList(){
         val emojiList: HorizontalScrollView = findViewById(R.id.emoji_list)
         val optionsButton: ImageView = findViewById(R.id.chat_MessageBar_ImageButton)
@@ -301,7 +305,6 @@ class ChatActivity : AppCompatActivity() {
             Log.e(TAG, "Upload error: $e")
         }
     }
-
 
     private fun sendImageMessage(imageUrl: String, userData:Map<String, Object>, messagesPath:String) {
         val messageData = hashMapOf(
